@@ -1,3 +1,8 @@
+# This is pretty old, and I want to go over it again
+
+The computer I want to install onto doesn't actually support gentoo installation medium, so I might as well use Arch instead. 
+These steps will be gone over again and made not incoherent, and I will find some other way of doing dotfiles that doesn't involve rm -rf spamming everywhere in bash files.
+
 ## Thanks to
 
 - [scotus-1](https://github.com/scotus-1/dotfiles) for format and what to use
@@ -11,6 +16,7 @@
 - [This](https://www.reddit.com/r/archlinux/comments/rz6294/arch_linux_laptop_optimization_guide_for/) nice guide for optimization
 - [MarianArlt](https://github.com/MarianArlt/sddm-sugar-dark/) for sddm theme, forked for catppuccin theming
 - [ayamir](https://github.com/ayamir/nvimdots/wiki/Plugins) for nvim reference
+
 
 ## INFO
 
