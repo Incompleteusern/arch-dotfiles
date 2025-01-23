@@ -145,8 +145,9 @@ and create a basic `<ESP>/loader/entries/arch.conf`
 title Arch Linux
 linux /vmlinuz-linux
 initrd /initramfs-linux.img
-options rd.luks.name=<DEVICE-UUID>=lvm root=/dev/VolGroup/root rw # might be optional?
+options rd.luks.name=<DEVICE-UUID>=lvm root=/dev/VolGroup/root rw
 ```
+(Though by virtue of [automounting](https://wiki.archlinux.org/title/Systemd#GPT_partition_automounting), specifying the root and resume may be unnecessary).
 
 Finally, run `mkinitcpio --allpresets` and we should be all good for now. Rebooting here is possible.
 
@@ -154,7 +155,12 @@ Finally, run `mkinitcpio --allpresets` and we should be all good for now. Reboot
 
 ## Unified Kernel Image
 
-Move the options in `arch.conf` to `/etc/cmdline.d/root.conf`. Edit `/etc/mkinitcpio.d/linux.preset` uncommenting the default_uki and fallback_uki options, storing things in /boot preferably.
+Some actual things for `/etc/cmdline.d/root.conf`:
+```
+rd.luks.name=<DEVICE-UUID>=lvm root=/dev/VolGroup/root resume=/dev/VolGroup/swap rw splash acpi_backlight=vendor audit=0 quiet
+```
+
+Edit `/etc/mkinitcpio.d/linux.preset` uncommenting the default_uki and fallback_uki options, storing things in /boot preferably.
 
 Now `arch.conf` is unnecessary. Rebuild `mkinitcpio --allpresets`.
 
