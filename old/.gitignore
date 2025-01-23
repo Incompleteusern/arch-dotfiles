@@ -1,0 +1,5 @@
+# better way of managing files from directories?
+.scripts/von
+.scripts/wallpaper
+
+.config/nvim

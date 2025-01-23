@@ -1,0 +1,115 @@
+#!/bin/bash
+
+# scripts by adi1090x
+
+## Get data
+TMP_DIR="$HOME/.cache/eww"
+
+## Is active
+is_active() {
+	if [[ -z "$(playerctl -ps spotify status)" ]]; then
+		echo "false"
+	else
+		echo "true"
+	fi
+
+}
+
+## Get status
+get_status() {
+	playerctl -p spotify --follow status | while read -r player_status; do
+		if [[ "$player_status" == *"Playing"* ]]; then
+			echo "󰏦"
+		else
+			echo "󰁚"
+		fi
+	done
+}
+
+## Get song
+get_song() {
+	playerctl -p spotify --follow metadata xesam:title | while read -r song; do
+		if [[ -n "$song" ]]; then
+			echo "$song"
+		fi
+	done
+}
+
+## Get artist
+get_artist() {
+	playerctl -p spotify --follow metadata xesam:artist | while read -r artist; do
+		if [[ -n "$artist" ]]; then
+			echo "$artist"
+		fi
+	done
+}
+
+## Get album
+get_album() {
+	playerctl -p spotify --follow metadata xesam:album | while read -r album; do
+		if [[ -n "$album" ]]; then
+			echo "$album"
+		fi
+	done
+}
+
+## Get time
+get_time() {
+	playerctl -p spotify --follow metadata --format "{{position}} {{mpris:length}}" | while read -r position length; do
+		#echo "$position"
+		#echo "$(playerctl -p spotify position)"
+		#echo "$(playerctl -p spotify metadata "mpris:length")"
+		atime=$(echo "print \$(($position * 100.0 / $length))" | zsh)
+		if [[ -n "$atime" ]]; then
+			echo "$atime"
+		fi
+	done
+}
+
+## Set time
+set_time() {
+	new_time=$(printf 'echo $((%f * $(playerctl -p spotify metadata "mpris:length") / 100000000.0))\n' "$1" | zsh)
+	playerctl -p spotify position "$new_time"
+}
+
+## Get cover
+get_cover() {
+	playerctl -p spotify --follow metadata mpris:artUrl | while read -r cover; do
+		# Check if the file has a embbeded album art
+		if [[ -n "$cover" ]]; then
+			id=$(sha1sum <<<"$cover")
+			tmp_temp_path="$TMP_DIR/${id::-4}.png"
+			echo "$tmp_temp_path"
+			if [[ ! -e "$tmp_temp_path" ]]; then
+				curl -sf --create-dirs "$cover" --output "$tmp_temp_path"
+			fi
+		fi
+	done
+}
+
+## Set position
+
+## Execute accordingly
+if [[ "$1" == "--song" ]]; then
+	get_song
+elif [[ "$1" == "--artist" ]]; then
+	get_artist
+elif [[ "$1" == "--album" ]]; then
+	get_album
+elif [[ "$1" == "--status" ]]; then
+	get_status
+elif [[ "$1" == "--time" ]]; then
+	get_time
+elif [[ "$1" == "--position" ]]; then
+	set_time "$2"
+elif [[ "$1" == "--cover" ]]; then
+	get_cover
+elif [[ "$1" == "--toggle" ]]; then
+	playerctl -p spotify play-pause
+elif [[ "$1" == "--next" ]]; then
+	playerctl -p spotify next
+elif [[ "$1" == "--prev" ]]; then
+	playerctl -p spotify previous
+elif [[ "$1" == "--active" ]]; then
+	is_active
+fi

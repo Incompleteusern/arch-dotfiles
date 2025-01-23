@@ -1,428 +1,211 @@
-# This is pretty old, and I want to go over it again
+This is a work in progress.
 
-The computer I want to install onto doesn't actually support gentoo installation medium, so I might as well use Arch instead. 
-These steps will be gone over again and made not incoherent, and I will find some other way of doing dotfiles that doesn't involve rm -rf spamming everywhere in bash files.
+# Allegiances
 
-## Thanks to
+- Window Manager: `Hyprland`
+- Text Editor: a mess really, vscode and jetbrains and nvim are all good except for I am too lazy for nvim
+- Color Scheme: `catppuccin`
+- More allegiances to come in the future :|.
 
-- [scotus-1](https://github.com/scotus-1/dotfiles) for format and what to use
-- [flick-0](https://github.com/flick0/dotfiles) for various configs, old waybar
-- [Saimoomedits](https://github.com/Saimoomedits/eww-widgets) for the top bar
-  - Modified for catppuccin theming, hyprland and spotify
-  - TODO move to fork?
-- [catppuccin](https://github.com/catppuccin) for the pastel theming over basically everything possible
-  - For rofi, Deathmonic specficially is used
-- [Arch wiki](https://wiki.archlinux.org/) and [various](https://wiki.archlinux.org/title/User:Bai-Chiang/Installation_notes) [other](https://gist.github.com/orhun/02102b3af3acfdaf9a5a2164bea7c3d6) [guides](https://www.reddit.com/r/archlinux/comments/zo83gb/how_i_setup_secure_boot_for_arch_linux_simple/) [about](https://gist.github.com/michaelb081988/0e3f1bbd3bb04fb34c0726e28da2a934) for notes over encryption and so forth
-- [This](https://www.reddit.com/r/archlinux/comments/rz6294/arch_linux_laptop_optimization_guide_for/) nice guide for optimization
-- [MarianArlt](https://github.com/MarianArlt/sddm-sugar-dark/) for sddm theme, forked for catppuccin theming
-- [ayamir](https://github.com/ayamir/nvimdots/wiki/Plugins) for nvim reference
+# Pre-installation
+
+This has the arch install guide as a reference as well as https://jpetazzo.github.io/2024/02/23/archlinux-luks-tpm-secureboot-install/
+https://github.com/joelmathewthomas/archinstall-luks2-lvm2-secureboot-tpm2
+https://gist.github.com/michaelb081988/0e3f1bbd3bb04fb34c0726e28da2a934
+https://gist.github.com/orhun/02102b3af3acfdaf9a5a2164bea7c3d6#mount-efi-partition
 
 
-## INFO
+## Partitioning
 
-These dotfiles come with three terrible scripts as of last updated:
+|  Partition | Size  | fdisk Type  | PARTLABEL |  File System |
+| ------------ | ------------ | ------------ |  ------------ |
+| EFI System | N/A  | N/A | EFI | N/A |
+| Linux Extended Boot | 1 GB  | xbootldr | boot | fat32 |
+| Linux Partition | Remainder  | fd | cryptlvm | volume |
 
-- `local.sh` which syncs local files into this github repo
-- `sync.sh` which syncs bundled github repos into local files, note that this contains repos I have forked
-- `init.sh` which installs the github repo into an arch install, should be run as root
-- `init-package.sh` which installs packages used
+* Make partitions with fdisk or cfdisk, and label them with gdisk
+* I am dual booting so an EFI file system exists already which I will use and not touch with a ten foot pole, so this is why we have an extended boot partition.
+* I am an idiot and I also want to try about btrfs so this goes hand in hand
 
-I don't know how well `init.sh` works right now, actually run anything here at your own risk :)
+## Filesystems
 
-## TODO
+This is roughly isomorphic to https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#LVM_on_LUKS and merges a few others:
 
-TODO:
+We first overrwrite the Linux Partition with random data:
+```
+dd if=/dev/urandom of=/dev/nvme0n1pN bs=1M status=progress
+```
+where `of` is the desired disk step (this is optional), double check that `of` is correct or you will be very unhappy. Now, we set up the btrfs file system.
+```
+cryptsetup benchmark # benchmark cryptsetup
 
-- update to hyprutils-git, hyprcurosr-git, hyprlang-git, hyprwayland-scanner-git:
-- pamixer to wpctl
-- swaylockd doesnt exist anymore sob
-- hyprlock?
-- document ag
-- https://github.com/end-4/dots-hyprland/tree/illogical-impulse replace eww and try it out
-- https://github.com/tkashkin/Adwaita-for-Steam
-- im sick of the wallpaper changing, find one wall paper i love and keep it forever
-- update wallpapers to get rid of ones I don't like, your name wallpapers
-- https://github.com/NoiSek/Aether
-- https://wiki.archlinux.org/title/System_time#Update_timezone_every_time_NetworkManager_connects_to_a_network
-- qbittorrent?
-- wait for https://github.com/catppuccin/cli to replace the bundle of hacks I have right now
-- keepassxc
-- Customize nvim (not for now)
-- https://wiki.archlinux.org/title/laptop#Hibernate_on_low_battery_level
-- Stop bundling `.sty` or something
-- Document https://wiki.archlinux.org/title/OpenSSH#Deny
-- Firewall
-- Document time sync
-- https://wiki.archlinux.org/title/Improving_performance
-- Customize oh-my-zsh more
-- https://wiki.archlinux.org/title/Makepkg#Tips_and_tricks
-- fix sync.sh
-- Configs for desktop
-  - EWW
-    - Add customization if mute
-- Customize firefox + fork mozilla?
-- Test untested parts (NEVER)
-- Switch to lightdm
-- Get spotify to work for local files
+cryptsetup -v luksFormat /dev/disk/by-partlabel/cryptlvm # create luks container, use an actual password ideally?
+cryptsetup luksHeaderBackup /dev/disk/by-partlabel/cryptlvm --header-backup-file header.img # backup the header somewhere, since if the header gets destroyed the data is inaccessible
+cryptsetup open /dev/disk/by-partlabel/cryptlvm lvm # open the container at /dev/mapper/lvm
+```
+
+Here's the plan for the logical volume:
+
+|  Logical Volume | Size  |  File System |
+| ------------ | ------------ | ------------ |
+| Root | 32 GB  | ext4 |
+| Swap | 16 GB | swap |
+| Home | Remaining - 256 MiB  | ext4 |
+
+Let's now create our lvm volume and populate it:
+```
+pvcreate /dev/mapper/lvm # Create a physical volume
+vgcreate VolGroup /dev/mapper/lvm # Create a volume group to add to
+
+# Create all your logical volumes on the volume group:
+lvcreate -L 32G VolGroup -n root
+lvcreate -L 16G VolGroup -n swap
+lvcreate -l 100%FREE VolGroup -n home
+lvreduce -L -256M VolGroup/home # Since we format a logical volume with ext4, we leave at least 256 MiB free space in the volume group to allow using e2scrub.
+```
+We then make our file systems (make an EFS separately if you need to)
+```
+mkfs.ext4 /dev/VolGroup/root
+mkfs.ext4 /dev/VolGroup/home
+mkswap /dev/VolGroup/swap
+mkfs.vfat -n boot /dev/disk/by-partlabel/boot
+```
+and then mount them
+```
+mount /dev/VolGroup/root /mnt
+mount --mkdir /dev/VolGroup/home /mnt/home
+swapon /dev/VolGroup/swap
+mount --mkdir -o uid=0,gid=0,fmask=0077,dmask=0077 /dev/disk/by-partlabel/EFI /mnt/efi
+mount --mkdir -o uid=0,gid=0,fmask=0077,dmask=0077 /dev/disk/by-partlabel/boot /mnt/boot
+```
 
 # Installation
 
-## Manual
+## Standard
 
-### Pre-Boot
+Change some pacman things and then pacstrap a bunch of things (here, `<CHIP>` is `intel` or `amd` depending on what chip type you use)
+```
+sed -i "s/^#ParallelDownloads/ParallelDownloads/" /etc/pacman.conf 
+sed -i "s/^#Color/Color/" /etc/pacman.conf # colors :D
 
-- Standard installation
-- resize EFI partition size to 1GB (TODO)
-- Three partitions and encryption (UNTESTED!!!)
+reflector --save /etc/pacman.d/mirrorlist \
+--protocol https --latest 5 --sort age
 
-  - Make root, user, and swap partitions using `cblsk` and part labels `cryptroot`, `cryptuser`, and `cryptswap`
-  - https://wiki.archlinux.org/title/Dm-crypt/Device_encryption
+pacstrap -K /mnt base linux linux-firmware linux-headers <CHIP>-ucode nano efibootmgr sudo networkmanager vim man-db man-pages 
+```
+Then generate an fstab
+```
+genfstab -L /mnt >> /mnt/etc/fstab # -U also works
+```
+We can now arch chroot and follow the arch wiki's steps pretty bat for bat
+```
+arch-chroot /mnt
+ln -sf /usr/share/zoneinfo/Region/City /etc/localtime 
+hwclock --systohc
+locale-gen
+nano /etc/locale.conf
+nano /etc/vconsole.conf
+nano /etc/hostname
 
-  ```
-     # cryptsetup benchmark
-     # cryptsetup --type luks2 --verify-passphrase --sector-size 4096 --verbose luksFormat /dev/disk/by-partlabel/cryptroot
-     # cryptsetup --type luks2 --verify-passphrase --sector-size 4096 --verbose luksFormat /dev/disk/by-partlabel/cryptuser
-     # cryptsetup --type luks2 --verify-passphrase --sector-size 4096 --verbose luksFormat /dev/disk/by-partlabel/cryptswap
+passwd
+useradd -m newuser
+passwd newuser
 
-     # cryptsetup luksHeaderBackup /dev/disk/by-partlabel/cryptroot --header-backup-file /mnt/backupcrypt/root.img
-     # cryptsetup luksHeaderBackup /dev/disk/by-partlabel/cryptuser --header-backup-file /mnt/backupcrypt/user.img
+nano /etc/sudoers
+visudo
+usermod -G wheel newuser
+```
 
-     # cryptsetup open /dev/disk/by-partlabel/cryptroot root
-     # cryptsetup open /dev/disk/by-partlabel/cryptuser user
-     # cryptsetup open /dev/disk/by-partlabel/cryptswap swap
-  ```
+##  Booting
 
-  - Unmount, close crypt, and remount to make sure that everything is working smoothly
-  - Mount and make file systems
+We use `systemd-boot` so we install that
+```
+bootctl install --boot-path=/boot --esp-path=/efi # omit arguments if no extended boot dir
+```
+and then make a default `<ESP>/loader/loader.conf ` (`<ESP> = /boot` here for dual booting)
+```
+console-mode auto
+default @saved
+timeout 10
+editor no
+```
 
-    ```
-      # mkfs.ext4 /dev/mapper/root
-      # mkfs.ext4 /dev/mapper/user
-      # mkswap -L swap /dev/mapper/swap
-      # mkdir /mnt/boot
+Make a copy of `/etc/mkinitcpio.conf` and then edit the `HOOKS=` line
+```
+HOOKS=(base systemd autodetect microcode modconf kms keyboard sd-vconsole block sd-encrypt lvm2 filesystems fsck)
+```
+adding `systemd, keyboard, sd-vconsole, sd-encrypt, lvm2` where `sd-vconsole` is optional if you aren't using standard `/etc/vconsole.conf`.
 
-      # mount LABEL=root /dev/mapper/root /mnt
-      # mount LABEL=user /dev/mapper/user /mnt/home
-      # mount LABEL=EFI /mnt/boot
-      # swapon -L swap
-    ```
+We can now generate initcpio:
+```
+mkinitcpio --allpresets
+```
+and create a basic `<ESP>/loader/entries/arch.conf`
+```
+title Arch Linux
+linux /vmlinuz-linux
+initrd /initramfs-linux.img
+options rd.luks.name=<DEVICE-UUID>=lvm root=/dev/VolGroup/root rw # might be optional?
+```
 
-- Generate fstab
-  - Use `LABEL=swap swap swap defaults 0 0` for swap (UNTESTED!!!)
-- Chroot
-  - ```
-      # arch-chroot /mnt
-      # export PS1="(chroot) ${PS1}"
-    ```
-- `pacstrap` the following
-  - `pacstrap /mnt base base-devel linux linux-firmware nano sudo intel-ucode`
-  - Linux install | `linux linux-firmware`
-  - Processor Microcode | `intel-ucode`
-  - Text Editor | `nano nano-syntax-highlighting`
-  - Network Manager | `networkmanager` and enable service
-- Disk Encryption (UNTESTED!!!)
-  - https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#LUKS_on_a_partition
-  - Configure `/etc/mkinitcpio.conf`, and add `systemd keyboard sd-vconsole sd-encrypt` presence
-  ```
-    HOOKS=(base udev systemd keyboard autodetect modconf kms sd-vconsole block sd-encrypt filesystems fsck)
-  ```
-  - Regenerate initramfs
-- Swap Encryption and Hibernation | `tpm2-tss tpm2-tools` (UNTESTED!!!)
-  - Configure `/etc/mkinitcpio.conf`, and add `resume` after `udev`
-  - Check `cat /sys/class/tpm/tpm0/tpm_version_major` has `2`
-  - List available TPMs at `systemd-cryptenroll --tpm2-device=list`
-  - Enroll key with `systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0,7 /dev/disk/by-partlabel/cryptswap`
-  - Test that it works with `/usr/lib/systemd/systemd-cryptsetup attach swap /dev/disk/by-partlabel/cryptswap - tpm2-device=auto`
-  - Add `rd.luks.options=SWAP_UUID=tpm2-device=auto` to kernel parameters
-- Systemd-boot (ENCRYPTION KERNEL PARAMS UNTESTED!!!)
-  - https://wiki.archlinux.org/title/Systemd-boot
-  - Use `/boot` as mount point and run `bootctl install`
-  - TODO loader params
-    - Enable editor, timeout 0
-  - Add in at `/boot/loader/entries/arch.conf`
-    ```
-      title   Arch Linux
-      linux   /vmlinuz-linux
-      initrd  /intel-ucode.img
-      initrd  /initramfs-linux.img
-      options rd.luks.name=ROOT_UUID=root root=/dev/mapper/root rd.luks.name=USER_UUID=user rd.luks.name=SWAP_UUID=swap resume=/dev/mapper/swap rw quiet splash acpi_backlight=vendor nowatchdog
-    ```
-  - TODO document params
+Finally, run `mkinitcpio --allpresets` and we should be all good for now. Rebooting here is possible.
 
-## Post-Boot
+# Post-Installation
 
-- Secure Boot | `sbctl`
-  - https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot#sbctl
-  - Verify with `sbctl status`, reset keys and enable set up mode
-  - `sbctl create-keys`
-  - `sbctl enroll-keys -m` and check status again
-  - Sign files with `sbctl sign-all`
-  - Check everything works with `sbctl status` and `sbctl list-files`
-  - Add pacman hooks from https://wiki.archlinux.org/title/Systemd-boot#pacman_hook
-  - Re-enable Secure Boot
-- Unified Kernel Image
-  - Move kernel parameters to `/etc/kernel/cmdline`
-  - Make bundled image with
-    ```
-       sbctl bundle -s -i /boot/intel-ucode.img \
-           -k /boot/vmlinuz-linux \
-           -f /boot/initramfs-linux.img \
-           -c /etc/kernel/cmdline \
-           /boot/EFI/Linux/archlinux.efi
-    ```
-  - Regenerate with `sbctl generate-bundles --sign`
-  - Remove default systemd-boot, remove `arch.conf`
-  - Do same for fallbacks if enough size in partition
-- Clean Up Boot Options
+## Unified Kernel Image
 
-  - `efibootmgr` can list and remove them as necessary
+Move the options in `arch.conf` to `/etc/cmdline.d/root.conf`. Edit `/etc/mkinitcpio.d/linux.preset` uncommenting the default_uki and fallback_uki options, storing things in /boot preferably.
 
-- Add user
-  `# useradd -m $user; passwd $user; usermod -aG wheel,audio,video,optical,storage $user`
-- Add wheel group to sudoers | `sudo`
-  - Use `visudo`
-  - Uncomment `# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL:ALL) ALL`
-  - Add
-    ```
-    Defaults      env_reset
-    Defaults      editor=/usr/bin/rnano, !env_editor
-    Defaults      passwd_timeout=0
-    ```
-- git, ssh/gpg | `git openssh github-cli`
-  ```
-     $ gh auth login
-     $ ssh-keygen -t ed25519 -C "$email"; ssh-add ~/.ssh/id_ed25519
-     $ gh ssh-key add ~/.ssh/id_ed25519.pub --title $hostname
-     $ gcl git@github.com:Incompleteusern/dotfiles.git
-     $ gpg --full-generate-key
-     $ gpg --list-secret-keys --keyid-format=long
-     $ git config --global user.signingkey $KEY
-     $ git config --global commit.gpgsign true
-     $ git config --global user.email "$email"
-     $ git config --global user.name "$name"
-  ```
-- Run `initpackage.sh` and then `init.sh`
+Now `arch.conf` is unnecessary. Rebuild `mkinitcpio --allpresets`.
 
-## Auto
+## Secure Boot
 
-- yay | `base-devel`
-- Mirror management | `reflector`
-  - Set US as country
-  - Enable `reflector.timer`
-- Enable Color, ILoveCandy, VerbosePkgLists, multilib and ParallelDownloads in /etc/pacman.conf
-- Make `makepkg` multithread
-  - https://unix.stackexchange.com/questions/268221/use-multi-threaded-make-by-default
-- zshrc | `zsh`
-- Pacman Utils | `paccache pacgraph pacman-contrib informant`
-- NetworkManager
-  - [Add local host to /etc/hosts](https://wiki.archlinux.org/title/Network_configuration#localhost_is_resolved_over_the_network)
-  - Use 1.1.1.1, 8.8.8.8 for default dns, mac address randomization
-  - Use basic `systemd-resolvd`
-- Make closing lid initiate sleep
-- Systemd-timesyncd for basic time syncing
+Before this, disable secure boot / put it in setup mode.
 
-# Desktop
+Install `pacman -S sbctl sbsigntools` and then ensure `sbctl status` outputs `Setup Mode` as enabled.
+
+Then create signing keys and enroll them
+```
+sbctl create-keys
+sbctl enroll-keys --microsoft # needed for dual booting
+sbctl verify
+sbctl sign -s <file> # for each of the earlier files, microsoft not being signed is fine. -s creates a hook for signing this file
+sbctl list-files
+```
+
+Regenerate initramfs after this and re-enable secure boot.
+
+## TPM
+
+We can now enroll our luks key into TPM (which is pretty secure modulo some privacy things that probably only matter if you are running from a government) to not need to enter our password each time. Secure boot should be on for this.
+
+Make sure `cat /sys/class/tpm/tpm0/tpm_version_major` outputs 2.
+
+```
+pacman -S tpm2-tools # Install the TPM tools
+```
+
+We then run the following
+```
+systemd-cryptenroll --tpm2-device=list # Check the name of the kernel module for our TPM
+systemd-cryptenroll --recovery-key /dev/disk/by-partlabel/cryptlvm # Generate a recovery key
+systemd-cryptenroll --tpm2-device=auto /dev/disk/by-partlabel/cryptlvm --tpm2-pcrs=0+7 # 0 can be omitted
+# /usr/lib/systemd/systemd-cryptsetup attach lvm /dev/disk/by-partlabel/cryptlvm - tpm2-device=auto # test if it works
+# systemd-cryptenroll /dev/disk/by-partlabel/cryptlvm --wipe-slot=password # wipe the password if necessary
+```
+Afterwards, add `rd.luks.options=<DEVICE-UUID>=tpm2-device=auto` to the entries to avoid entering the password again (editting `crypttab.initramfs` is an alternative).
+
+If any early kernel modules are needed, add it to `MODULES=(tpm_tis)` and run mkinitcpio again.
+
+If the state of secure boot or firmware changes, running
+```
+systemd-cryptenroll --wipe-slot=tpm2 /dev/disk/by-partlabel/cryptlvm --tpm2-pcrs=0+7
+```
+wipes the slot which allows for it to be re-enrolled.
 
 ## TODO
 
-## Manual
-
-- Add `sd-plymouth` hook when sd-encrypt actually used
-  - Configure `/etc/mkinitcpio.conf`, and add `systemd keyboard sd-vconsole sd-encrypt` presence
-  ```
-    HOOKS=(base udev systemd sd-plymouth keyboard autodetect modconf kms sd-vconsole block sd-encrypt filesystems fsck)
-  ```
-- Fcronjob for wall paper timer and ewww
-
-  - ```
-    systemctl enable fcron.service
-    systemctl enable fcrontimer.service
-    fcrontab -e
-    ```
-  - Then (TODO this is terrible)
-
-    ```
-    SHELL=/usr/bin/zsh
-    PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-    XDG_RUNTIME_DIR=/run/user/1000
-    WAYLAND_DISPLAY=wayland-1
-
-    !exesev,bootrun
-
-    */15 * * * * source ~/.env; bash ~/.scripts/wallpaper/wallpaper.sh
-    ```
-
-  - TODO automate this
-
-- Add `OWM_API_KEY` to be exported frm .env
-
-## Auto
-
-- Compositor | `hyprland qt5-wayland qt6-wayland`
-- XDG Integration | `xdg-utils xdg-desktop-portal-hyprland`
-- Status Bars | `eww`
-- Wallpapers | `swww`
-- Notification System | `dunst libnotify`
-- Session Locker | `swaylockd swaylock-effects swayidle`
-- Font Input | `fcitx5 fcitx5-chinese-addons fcitx5-configtool fcitx-gtk fcitx5-pinyin-zhwiki fcitx5-qt mozc`
-- App Launcher | `rofi-lbonn-wayland networkmanager-dmenu`
-- Terminal | `alacritty`
-- Pipewire | `pipewire wireplumber pipewire-jack pipewire-pulse`
-- Display Manager | `sddm sddm-conf`
-- Color Temperature | `gammastep`
-- Booting Animation | `plymouth`
-- Color Picker `hyprpicker`
-- Polkit | `polkit-kde-agent`
-
-# Utilities
-
-## Manual
-
-- Order Chinese as priority for Noto CJK
-
-  - https://wiki.archlinux.org/title/Localization/Simplified_Chinese#Chinese_characters_displayed_as_variant_(Japanese)_glyphs
-  - TODO automate that shit
-
-- Most of this is intel or computer specific to me
-
-  - https://wiki.archlinux.org/title/Intel_graphics and https://wiki.archlinux.org/title/Power_management#Power_saving
-  - Early kms
-    - Add `i915` in `MODULES=()`, regenerate initramfs
-    - In `/etc/modprobe.d/i915.conf`
-      ```
-      options i915 enable_guc=2 enable_fbc=1 enable_psr=1
-      ```
-  - Hardware acceleration
-    - ```
-       yay -S intel-media-driver libvdpau-va-gl libva-utils vdpauinfo
-      ```
-    - Add `export LIBVA_DRIVER_NAME=iHD` and `export VDPAU_DRIVER=va_gl`, check that things still work with `vainfo` and `vdpauinfo`
-    - Move environment variables to ` /etc/environment`
-  - Thermald
-    - ```
-      yay -S thermald
-      systemctl enable thermald
-      ```
-  - Module stuff
-
-    - Add in `/etc/modprobe.d/audio_powersave.conf`
-
-      ```
-      options snd_hda_intel power_save=1
-      ```
-
-    - Add in `/etc/sysctl.d/dirty.conf`
-
-          ```
-          vm.dirty_writeback_centisecs = 6000
-          ```
-
-      TODO gpu power saving, audio power save
-
-## Auto
-
-- Desktop Control | `brightnessctl pamixer`
-- Fonts | `ttf-ms-fonts noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra ttf-jetbrains-mono-nerd ttf-jetbrains-mono ttf-iosevka-nerd`
-  - Set Chinese as font priority
-- Screenshots | `grimblast-git`
-- Scheduler | `cronie`
-- Command Line
-  - Replace cat | `bat`
-  - Replace ls | `exa`
-  - Find | `fzf`, `fd`
-  - Requests | `httpie`
-  - Ping | `gping`
-  - Git Info | `git-delta onefetch`
-  - Command Info | `tldr man-db`
-  - Youtube Downloader | `yt-dlp`
-  - System Information | `htop neofetch duf bandwhich`
-- power | `tlp tlp-rdw`
-- Spotify Integration | `playerctl`
-- crontab | `fcron`
-
-# Silly
-
-## Manual
-
-## Auto
-
-- fortune | `fortune`
-- cmatrix | `cmatrix`
-- ascii art `ascii-rain asciiquarium sl donut.c`
-
-# Applications
-
-## Manual
-
-- Firefox
-
-  - Block reddit in /etc/hosts most of the time
-  - Use duckduckgo, ublock origin, h26ify, privacy badger, stylus
-  - Use https only
-  - TODO automatically copy pref.js + extensions?
-  - Set `media.ffmpeg.vaapi.enabled` to true
-
-- use `cups` for printer stuff.
-  - Do https://wiki.archlinux.org/title/avahi#hostname_resolution
-  - todo automate, move to installation section too?
-- enable firefox hardware acceleration, reopen tabs on close
-  - TODO automate?
-
-## Auto
-
-- Firefox | `firefox`
-- Discord | `discord-electron-bin discord-update-skip`
-- Prism Launcher | `prismlauncher`
-- Steam | `steam`
-- Vs Code | `visual-studio-code-bin`
-- VPN | `openvpn protonvpn-gui networkmanager-openvpn`
-- Spotify |`spotify-edge spotifywm spicetify`
-- Neovim | `nvim` (TODO nvimdots)
-- Intellij | `intellij-idea-community-edition` (have ultimate somehow)
-- File Manager | `thunar gvfs rmtrash trash-cli thunar-archive-plugin thunar-media-tags-plugin thunar-volman`
-- Tor | `tor torbrowser-launcher`
-- krita | `krita`
-- joplin | `joplin`
-
-# Theming
-
-## Manual
-
-- Use catpuccin mocha pink LOL
-  - Through stylus
-    - https://github.com/catppuccin/github
-    - https://github.com/catppuccin/modrinth
-    - https://github.com/catppuccin/duckduckgo
-    - https://github.com/catppuccin/youtube
-    - https://github.com/catppuccin/reddit (irrelevant)
-    - https://github.com/catppuccin/proton
-    - https://github.com/catppuccin/twitch
-    - https://github.com/catppuccin/hacker-news
-    - https://github.com/catppuccin/monkeytype
-- Through extension
-  - https://github.com/catppuccin/firefox
-  - https://github.com/catppuccin/vscode
-  - https://github.com/catppuccin/jetbrains
-  - https://github.com/catppuccin/vscode-icons
-  - https://github.com/catppuccin/joplin
-- Through theming tool
-  - https://github.com/catppuccin/gtk
-  - https://github.com/catppuccin/qt5ct (extend to qt6ct)
-- Manually
-  - https://github.com/catppuccin/prismlauncher
-  - https://github.com/catppuccin/bat
-  - https://github.com/catppuccin/fzf
-  - https://github.com/catppuccin/tty
-- GTK and QT
-  - Use JetBrains Mono 10 font
-  - phinger cursors
-  - pink folders
-    ```
-    papirus-folders -C cat-mocha-pink --theme Papirus
-    ```
-
-## Auto
-
-- Theming Tools | `qt5ct qt6ct nwg-look`
-- Papirus | `papirus-folders-catppuccin-git papirus-icon-theme-git`
-- Cursors | `phinger-cursors`
+timesyncd, swapfile, boot change protections, allow for dm specialties ssd things, look into chkboot
+https://wiki.archlinux.org/title/Dm-crypt/Specialties#Disable_workqueue_for_increased_solid_state_drive_(SSD)_performance
+and also the other one.
+check if swap file works haha.
