@@ -60,13 +60,7 @@ TODO:
 ## Auto
 
 - zshrc | `zsh`
-- Pacman Utils | `paccache pacman-contrib informant`
-- NetworkManager
-  - [Add local host to /etc/hosts](https://wiki.archlinux.org/title/Network_configuration#localhost_is_resolved_over_the_network)
-  - Use 1.1.1.1, 8.8.8.8 for default dns, mac address randomization
-  - Use basic `systemd-resolvd`
 - Make closing lid initiate sleep
-- Systemd-timesyncd for basic time syncing
 
 # Desktop
 

@@ -344,6 +344,15 @@ wifi.cloned-mac-address=random
 
 ## Desktop
 
+## work in progress
+
+We install `hyprland`
+```bash
+todo idk
+```
+
+We install a terminal `alacritty`.
+
 ## TODO
 
 copy `/etc/reflector.conf`
