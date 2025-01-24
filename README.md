@@ -12,10 +12,11 @@ This is a work in progress.
 
 # References
 
-This has the arch install guide as a reference as well as https://jpetazzo.github.io/2024/02/23/archlinux-luks-tpm-secureboot-install/
-https://github.com/joelmathewthomas/archinstall-luks2-lvm2-secureboot-tpm2
-https://gist.github.com/michaelb081988/0e3f1bbd3bb04fb34c0726e28da2a934
-https://gist.github.com/orhun/02102b3af3acfdaf9a5a2164bea7c3d6#mount-efi-partition
+This has the arch install guide as a reference as well as 
+[https://jpetazzo.github.io/2024/02/23/archlinux-luks-tpm-secureboot-install/](here)
+[https://github.com/joelmathewthomas/archinstall-luks2-lvm2-secureboot-tpm2](here)
+[https://gist.github.com/michaelb081988/0e3f1bbd3bb04fb34c0726e28da2a934](here)
+[https://gist.github.com/orhun/02102b3af3acfdaf9a5a2164bea7c3d6#mount-efi-partition](and here).
 
 # Pre-installation
 
