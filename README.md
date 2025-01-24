@@ -258,13 +258,29 @@ makepkg -si
 cd ..
 rm -rf paru
 ```
-We now install `paccache` and `informant` to clean the pacman cache and force reading update notes respectively.
+From here on we omit installing the package itself, and just write | `package-name other-package`
+to indicate a package.
+We now install some other helpers to clean the pacman cache and force reading update notes respectively | `paccache informant` 
 ```bash
-paru -S pacman-contrib informant
 systemctl enable paccache.timer
 usermod -aG informant <user>
 ```
 Finally, we now enable `Color, VerbosePkgLists, ParallelDownloads` and add `ILoveCandy` (if you haven't already) in `/etc/pacman.conf` and include `multilib`.
+
+### Git
+
+We set up a gpg / ssh key (though reuse is pretty possible), | `openssh git github-cli`
+```bash
+gh auth login # use ssh
+ssh-keygen -t ed25519 -C "$email"; ssh-add ~/.ssh/id_ed25519
+gh ssh-key add ~/.ssh/id_ed25519.pub --title $hostname
+gpg --full-generate-key
+gpg --list-secret-keys --keyid-format=long
+git config --global user.signingkey $KEY
+git config --global commit.gpgsign true
+git config --global user.email "$email"
+git config --global user.name "$name"
+```
 
 ## Operating System
 
@@ -277,34 +293,23 @@ systemctl enable fstrim.timer
 ```
 (tpm2 doesn't work for these commands it seems).
 
-We also install `tlp` for laptop battery power.
-```bash
-systemctl enable tlp.service
-```
-
 ### Intel
 
 Follows [here](https://wiki.archlinux.org/title/Intel_graphics), a decent amount of 
 this is likely platform dependent shrug.
 
-Install the following
-```bash
-paru -S mesa lib32-mesa vulkan-intel lib32-vulkan-intel
-```
-Add the following to `/etc/modprobe.d/i1915.conf`
+We first install some drivers for intel | `mesa lib32-mesa vulkan-intel lib32-vulkan-intel`
+and then add the following to `/etc/modprobe.d/i1915.conf`
 ```
 options i915 enable_guc=3 enable_fbc=1 
 ```
 
-For hardware acceleration, use [here](https://wiki.archlinux.org/title/Hardware_video_acceleration#Intel) to find the packages, for me this is
-```bash
-paru -S intel-media-driver libvdpau-va-gl libva-utils vdpauinfo
-```
-Then add `export LIBVA_DRIVER_NAME=iHD` and `export VDPAU_DRIVER=va_gl` to `/etc/environment`.
+For hardware acceleration, use [here](https://wiki.archlinux.org/title/Hardware_video_acceleration#Intel) to find the packages | `intel-media-driver libvdpau-va-gl libva-utils vdpauinfo`
+Afterwards, add `export LIBVA_DRIVER_NAME=iHD` and `export VDPAU_DRIVER=va_gl` to `/etc/environment`.
 
 ### Power Saving
 
-We install `thermald` and `tlp`
+We install a temperature and power manager | `thermald tlp`
 ```bash
 systemctl enable thermald tlp.service
 systemctl mask systemd-rfkill.service systemd-rfkill.socket # for tlp
@@ -312,7 +317,7 @@ systemctl mask systemd-rfkill.service systemd-rfkill.socket # for tlp
 
 ### Time Sync
 
-We use `chrony` and `networkmanager-dispatcher-chrony` for time sync, see `chrony.conf` in this repo
+We use chrony for time sync as a laptop | `chrony networkmanager-dispatcher-chrony`
 ```bash
 systemctl enable chronyd.service
 usermod -aG chrony <user>
@@ -326,7 +331,7 @@ We implement [https://wiki.archlinux.org/title/Network_configuration#localhost_i
 ::1              localhost
 ```
 
-We use `systemd-resolved` 
+We will use `systemd-resolved` 
 ```bash
 systemctl enable systemd-resolved.service
 ln -sf ../run/systemd/resolve/stub-resolv.conf /etc/resolv
@@ -362,18 +367,6 @@ copy `/etc/chrony.conf`
 boot change protections look into chkboot
 look into backups
 - firewall
-
-- git, ssh/gpg | `git openssh github-cli`
-  ```
-     $ gh auth login
-     $ ssh-keygen -t ed25519 -C "$email"; ssh-add ~/.ssh/id_ed25519
-     $ gh ssh-key add ~/.ssh/id_ed25519.pub --title $hostname
-     $ gpg --full-generate-key
-     $ gpg --list-secret-keys --keyid-format=long
-     $ git config --global user.signingkey $KEY
-     $ git config --global commit.gpgsign true
-     $ git config --global user.email "$email"
-     $ git config --global user.name "$name"
 
 zsh hibernate and suspend alias
 
