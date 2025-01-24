@@ -367,6 +367,7 @@ look into backups
 
 zsh hibernate and suspend alias
 
+ripgrep
 
 ## TO PROCESS
 

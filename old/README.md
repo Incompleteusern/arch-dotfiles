@@ -17,18 +17,6 @@ These steps will be gone over again and made not incoherent, and I will find som
 - [MarianArlt](https://github.com/MarianArlt/sddm-sugar-dark/) for sddm theme, forked for catppuccin theming
 - [ayamir](https://github.com/ayamir/nvimdots/wiki/Plugins) for nvim reference
 
-
-## INFO
-
-These dotfiles come with three terrible scripts as of last updated:
-
-- `local.sh` which syncs local files into this github repo
-- `sync.sh` which syncs bundled github repos into local files, note that this contains repos I have forked
-- `init.sh` which installs the github repo into an arch install, should be run as root
-- `init-package.sh` which installs packages used
-
-I don't know how well `init.sh` works right now, actually run anything here at your own risk :)
-
 ## TODO
 
 TODO:
@@ -37,7 +25,7 @@ TODO:
 - pamixer to wpctl
 - swaylockd doesnt exist anymore sob
 - hyprlock?
-- document ag
+- document ripgrep
 - https://github.com/end-4/dots-hyprland/tree/illogical-impulse replace eww and try it out
 - https://github.com/tkashkin/Adwaita-for-Steam
 - im sick of the wallpaper changing, find one wall paper i love and keep it forever
