@@ -348,7 +348,7 @@ ethernet.cloned-mac-address=random
 wifi.cloned-mac-address=random
 ```
 
-## Desktop
+# Desktop
 
 ## work in progress
 
@@ -372,7 +372,25 @@ zsh hibernate and suspend alias
 
 ripgrep
 
-## TO PROCESS
+cava conf
+
+# Command Line
+
+- Replace cat | `bat`
+- Replace ls | `exa`
+- Find | `fzf`, `fd`
+- Requests | `httpie`
+- Ping | `gping`
+- Git Info | `git-delta onefetch`
+- Command Info | `tldr man-db`
+- Youtube Downloader | `yt-dlp`
+- System Information | `htop neofetch duf bandwhich`
+
+And also here's some random terminal things :D
+- Random silly terminal commands | `cowsay fortune-mod sl`
+- Fancy displays | `cbonsai pipes.sh cava`
+
+# TO PROCESS
 
 # zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -421,3 +439,189 @@ cat <<EOT >> /home/"$USER"/.gitconfig
 [diff]
     colorMoved = default
 EOT
+
+# More to process
+
+## Thanks to
+
+- [scotus-1](https://github.com/scotus-1/dotfiles) for format and what to use
+- [flick-0](https://github.com/flick0/dotfiles) for various configs, old waybar
+- [Saimoomedits](https://github.com/Saimoomedits/eww-widgets) for the top bar
+  - Modified for catppuccin theming, hyprland and spotify
+  - TODO move to fork?
+- [catppuccin](https://github.com/catppuccin) for the pastel theming over basically everything possible
+  - For rofi, Deathmonic specficially is used
+- [ayamir](https://github.com/ayamir/nvimdots/wiki/Plugins) for nvim reference
+
+## TODO
+
+TODO:
+
+
+- update to hyprutils-git, hyprcurosr-git, hyprlang-git, hyprwayland-scanner-git:
+- pamixer to wpctl
+- document ripgrep
+- https://github.com/end-4/dots-hyprland/tree/illogical-impulse replace eww and try it out
+- https://github.com/tkashkin/Adwaita-for-Steam
+- im sick of the wallpaper changing, find one wall paper i love and keep it forever
+- update wallpapers to get rid of ones I don't like, your name wallpapers
+- https://github.com/NoiSek/Aether
+- qbittorrent?
+- keepassxc
+- Customize nvim (not for now)
+- https://wiki.archlinux.org/title/laptop#Hibernate_on_low_battery_level
+- Stop bundling `.sty` or something
+- Document https://wiki.archlinux.org/title/OpenSSH#Deny
+- Firewall
+- https://wiki.archlinux.org/title/Improving_performance
+- Customize oh-my-zsh more
+- https://wiki.archlinux.org/title/Makepkg#Tips_and_tricks
+- Test untested parts (NEVER)
+- Get spotify to work for local files
+- look into musicbee
+
+# Installation
+
+## Manual
+
+## Auto
+
+- zshrc | `zsh`
+- Make closing lid initiate sleep
+
+# Desktop
+
+## TODO
+
+## Manual
+
+- Add `sd-plymouth` hook when sd-encrypt actually used
+  - Configure `/etc/mkinitcpio.conf`, and add `systemd keyboard sd-vconsole sd-encrypt` presence
+  ```
+    HOOKS=(base udev systemd sd-plymouth keyboard autodetect modconf kms sd-vconsole block sd-encrypt filesystems fsck)
+  ```
+- Fcronjob for wall paper timer and ewww
+
+  - ```
+    systemctl enable fcron.service
+    systemctl enable fcrontimer.service
+    fcrontab -e
+    ```
+  - Then (TODO this is terrible)
+
+    ```
+    SHELL=/usr/bin/zsh
+    PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+    XDG_RUNTIME_DIR=/run/user/1000
+    WAYLAND_DISPLAY=wayland-1
+
+    !exesev,bootrun
+
+    */15 * * * * source ~/.env; bash ~/.scripts/wallpaper/wallpaper.sh
+    ```
+
+  - TODO automate this
+
+- Add `OWM_API_KEY` to be exported frm .env
+
+## Auto
+
+- Desktop Control | `brightnessctl pamixer`
+- Compositor | `hyprland qt5-wayland qt6-wayland`
+- XDG Integration | `xdg-utils xdg-desktop-portal-hyprland`
+- Status Bars | TODO
+- Wallpapers | TODO hyprpaper?
+- Notification System | `dunst libnotify`
+- Session Locker | TODO hyprlock?
+- Font Input | TODO look into `fcitx5 fcitx5-chinese-addons fcitx5-configtool fcitx-gtk fcitx5-pinyin-zhwiki fcitx5-qt mozc`
+- App Launcher | TODO look into
+- Terminal | `alacritty`
+- Pipewire | `pipewire wireplumber pipewire-jack pipewire-pulse`
+- Display Manager | TODO
+- Color Temperature | `gammastep`
+- Booting Animation | TODO how does this work `plymouth`
+- Color Picker `hyprpicker`
+- Polkit | TODO `polkit-kde-agent` does an alternative exist yet?
+
+- Fonts | `ttf-ms-fonts noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra ttf-jetbrains-mono-nerd ttf-jetbrains-mono ttf-iosevka-nerd`
+  - Set Chinese as font priority
+- Screenshots | `grimblast-git`
+- Scheduler | `cronie`
+- Spotify Integration | `playerctl`
+- crontab | `fcron`
+
+# Applications
+
+## Manual
+
+- Firefox
+  - Use duckduckgo, ublock origin, h26ify, privacy badger, stylus
+  - Use https only
+  - TODO automatically copy pref.js + extensions?
+  - Set `media.ffmpeg.vaapi.enabled` to true
+
+- use `cups` for printer stuff.
+  - Do https://wiki.archlinux.org/title/avahi#hostname_resolution
+  - todo automate, move to installation section too?
+- enable firefox hardware acceleration, reopen tabs on close
+  - TODO automate?
+
+## Auto
+
+- Firefox | `firefox`
+- Discord | `discord-electron-bin discord-update-skip`
+- Prism Launcher | `prismlauncher`
+- Steam | `steam`
+- Vs Code | `visual-studio-code-bin`
+- VPN | `openvpn protonvpn-gui networkmanager-openvpn`
+- Spotify |`spotify-edge spotifywm spicetify`
+- Neovim | `nvim` (TODO nvimdots)
+- Intellij | `intellij-idea-community-edition`
+- File Manager | `thunar gvfs rmtrash trash-cli thunar-archive-plugin thunar-media-tags-plugin thunar-volman` (check out dolphin)
+- Tor | `tor torbrowser-launcher`
+- krita | `krita`
+
+# Theming
+
+## Manual
+
+- Use catpuccin mocha pink LOL
+  - Through stylus
+    - https://github.com/catppuccin/github
+    - https://github.com/catppuccin/modrinth
+    - https://github.com/catppuccin/duckduckgo
+    - https://github.com/catppuccin/youtube
+    - https://github.com/catppuccin/reddit (irrelevant)
+    - https://github.com/catppuccin/proton
+    - https://github.com/catppuccin/twitch
+    - https://github.com/catppuccin/hacker-news
+    - https://github.com/catppuccin/monkeytype
+- Through extension
+  - https://github.com/catppuccin/firefox
+  - https://github.com/catppuccin/vscode
+  - https://github.com/catppuccin/jetbrains
+  - https://github.com/catppuccin/vscode-icons
+  - https://github.com/catppuccin/joplin
+- Through theming tool
+  - https://github.com/catppuccin/gtk
+  - https://github.com/catppuccin/qt5ct (extend to qt6ct)
+- Manually
+  - https://github.com/catppuccin/prismlauncher
+  - https://github.com/catppuccin/bat
+  - https://github.com/catppuccin/fzf
+  - https://github.com/catppuccin/tty
+  - https://github.com/catppuccin/mdBook
+  - https://github.com/catppuccin/discord
+- GTK and QT
+  - Use JetBrains Mono 10 font
+  - phinger cursors
+  - pink folders
+    ```
+    papirus-folders -C cat-mocha-pink --theme Papirus
+    ```
+
+## Auto
+
+- Theming Tools | `qt5ct qt6ct nwg-look`
+- Papirus | `papirus-folders-catppuccin-git papirus-icon-theme-git`
+- Cursors | `phinger-cursors`
