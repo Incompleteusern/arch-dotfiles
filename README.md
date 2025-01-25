@@ -258,8 +258,13 @@ makepkg -si
 cd ..
 rm -rf paru
 ```
-From here on we omit installing the package itself, and just write | `package-name other-package`
-to indicate a package.
+
+From here on we omit installing the package itself, and just write | `!package-name (other-package)`
+to indicate a package or two. 
+- `()` indicates that this repository has my local files for 
+- `!` indicates that this package has catppuccin support.
+- `#` indicates this package has install steps beside package manager.
+
 We now install some other helpers to clean the pacman cache and force reading update notes respectively | `paccache informant` 
 ```bash
 systemctl enable paccache.timer
@@ -317,7 +322,7 @@ systemctl mask systemd-rfkill.service systemd-rfkill.socket # for tlp
 
 ### Time Sync
 
-We use chrony for time sync as a laptop | `chrony networkmanager-dispatcher-chrony`
+We use chrony for time sync as a laptop | `(chrony) networkmanager-dispatcher-chrony`
 ```bash
 systemctl enable chronyd.service
 usermod -aG chrony <user>
@@ -352,67 +357,61 @@ wifi.cloned-mac-address=random
 
 ## work in progress
 
-We install `hyprland`
+We use hyprland as our WM
+- Pipewire `pipewire wireplumber pipewure-jack pipewire-pulse pipewire-alsa`
+- Brightness Control | `brightnessctl`
+- Wallpapers | `#hyprpaper` (`swww` for fancier?)
+- Compositor | `hyprland qt5-wayland qt6-wayland`
+- XDG Integration | `xdg-utils xdg-desktop-portal-hyprland`
+
 ```bash
 todo idk
 ```
 
-## TODO
+todo firefox nightly
 
-copy `/etc/reflector.conf`
-copy `/etc/chrony.conf`
-copy new .zshrc
+TODO
 
-boot change protections look into chkboot
-look into backups
-- firewall
+- Compositor | `hyprland qt5-wayland qt6-wayland`
+- XDG Integration | `xdg-utils xdg-desktop-portal-hyprland`
+- Status Bars | TODO
+- Wallpapers | TODO hyprpaper?
+- Notification System | `dunst libnotify`
+- Session Locker | TODO hyprlock?
+- Font Input | TODO look into `fcitx5 fcitx5-chinese-addons fcitx5-configtool fcitx-gtk fcitx5-pinyin-zhwiki fcitx5-qt mozc`
+- App Launcher | TODO look into
+- Pipewire | `pipewire wireplumber pipewire-jack pipewire-pulse`
+- Display Manager | TODO
+- Color Temperature | `gammastep`
+- Booting Animation | TODO how does this work `plymouth`
+- Color Picker `hyprpicker`
+- Polkit | TODO `polkit-kde-agent` does an alternative exist yet?
 
-zsh hibernate and suspend alias
-
-ripgrep
-
-cava conf
+- Fonts | `nerd-fonts`
+<!-- ttf-ms-fonts noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra ttf-jetbrains-mono-nerd ttf-jetbrains-mono ttf-iosevka-nerd` -->
+  - Set Chinese as font priority
+- Screenshots | `grimblast-git`
+- Spotify Integration | `playerctl`
 
 # Command Line
 
-For our terminal, we use alacritty. | `alacritty`
-We then install zsh and some plugins and theme  [pure](https://github.com/sindresorhus/pure) (though this might become p10k) | `zsh`
+For our terminal, we use alacritty. | `!(alacritty)`
+We then install oh-my-zsh and some plugins and theme [pure](https://github.com/sindresorhus/pure) (though this might become p10k) | `(zsh)`
 ```bash
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 # rm .bash_history .bash_logout .bash_profile .bashrc
 
-cd ~/.oh-my-zsh/plugins/
+cd ~/.oh-my-zsh/custom/plugins/
 git clone https://github.com/zsh-users/zsh-autosuggestions.git
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
 git clone https://github.com/zsh-users/zsh-completions.git
 
-mkdir ~/.zsh # yes ig this doesn't belong here but idrc
-cd ~/.zsh
+cd ../themes # yes ig this doesn't belong here but idrc
 git clone https://github.com/sindresorhus/pure.git
 ```
 We now add these plugins and more to `.zshrc`
-```
+```zsh
 plugins=(git zsh-autosuggestions zsh-syntax-highlighting zsh-completions zsh-autosuggestions colored-man-pages sudo)
-```
-
-Here's a list of some other commands
-- Find | `fzf ripgrep`
-- Git Info | `onefetch`
-- Command Info | `tldr man-db`
-- Youtube Downloader | `yt-dlp`
-- System Information | `neofetch`
-
-- Random silly terminal commands | `cowsay fortune-mod sl`
-- Fancy silly terminal things | `cbonsai pipes.sh cava`
-
-And now we set some aliases and pure autoprompt
-```
-alias sl="sl -e" # escape early
-
-alias hibernate="sudo systemctl hibernate"
-alias sleep="sudo systemctl suspend"
-alias poweroff="sudo systemctl poweroff"
-alias restart="sudo systemctl reboot"
 
 # pure
 fpath+=($HOME/.zsh/pure)
@@ -420,22 +419,61 @@ autoload -U promptinit; promptinit
 prompt pure
 ```
 
-TODO theme alacritty so that i can theme pure
-
-- Replace cat | `bat`
-- Replace ls | `exa`
-- Find | `fzf`, `fd`
+Here's a list of some other commands
+- cat replacement | `!bat`
+- ls replacement | `!eza #vivid` 
+  - add `LS_COLORS=$(vivid generate catppiccin mocha)` to `.zshrc`, needs `nerdfont`
+- Find | `fzf ripgrep`
+- Git Info | `onefetch`
 - Requests | `httpie`
 - Ping | `gping`
-- Git Info | `git-delta onefetch`
 - Command Info | `tldr man-db`
-- Youtube Downloader | `yt-dlp`
-- System Information | `htop neofetch duf bandwhich`
+- Downloading | `yt-dlp wget`
+- Git Info | `!#git-delta`
+  - Add the following to `.gitconfig` and install Catpuccin
+```
+[core]
+        pager = delta
+[interactive]
+        diffFilter = delta --color-only
+[delta]
+        navigate = true
+        side-by-side = true
+[merge]
+        conflictStyle = zdiff3
+[include]
+        path = ~/.config/delta/themes/catppuccin.gitconfig
+[delta]
+        features = catppuccin-mocha
+```
+- System Information | `htop duf #bandwhich`
+- Silly commands | `cowsay fortune-modcbonsai pipes.sh cava`
 
-Finally here's some aliases
+And now we set some aliases in `$ZSH_CUSTOM/alias.zsh`
+```zsh
+alias ez="eza -lah --no-user --icons=always --group-directories-first"
+alias hibernate="sudo systemctl hibernate"
+alias sleep="sudo systemctl suspend"
+alias poweroff="sudo systemctl poweroff"
+alias restart="sudo systemctl reboot"
+```
 
+# TODO
+
+copy `/etc/chrony.conf`
+copy new .zshrc
+
+boot change protections look into chkboot
+look into backups
+- firewall
+
+cava conf
 
 # TO PROCESS
+
+try blurring things again
+
+look into fonts
 
 # papirus folders
 papirus-folders -C pink --theme Papirus
@@ -548,7 +586,8 @@ TODO:
 - Color Picker `hyprpicker`
 - Polkit | TODO `polkit-kde-agent` does an alternative exist yet?
 
-- Fonts | `ttf-ms-fonts noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra ttf-jetbrains-mono-nerd ttf-jetbrains-mono ttf-iosevka-nerd`
+- Fonts | `nerd-fonts`
+<!-- ttf-ms-fonts noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra ttf-jetbrains-mono-nerd ttf-jetbrains-mono ttf-iosevka-nerd` -->
   - Set Chinese as font priority
 - Screenshots | `grimblast-git`
 - Spotify Integration | `playerctl`
