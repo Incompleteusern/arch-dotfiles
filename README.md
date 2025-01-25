@@ -169,7 +169,7 @@ reboot
 
 Some actual things for `/etc/cmdline.d/root.conf`:
 ```bash
-rd.luks.name=<DEVICE-UUID>=lvm root=/dev/VolGroup/root resume=/dev/VolGroup/swap rw splash acpi_backlight=vendor audit=0 bgrt_disable rd.shell=0 rd.emergency=reboot
+rd.luks.name=<DEVICE-UUID>=lvm root=/dev/VolGroup/root resume=/dev/VolGroup/swap rw splash audit=0 bgrt_disable rd.shell=0 rd.emergency=reboot
 ```
 
 Edit `/etc/mkinitcpio.d/linux.preset` uncommenting the `default_uki` and `fallback_uki` options, storing things in `/boot` preferably. Uncomment `default_options` too.
@@ -228,7 +228,7 @@ wipes the slot which allows for it to be re-enrolled.
 useradd -m <user>
 passwd <user>
 
-sudoedit /etc/sudoers # uncomment %wheel ALL=(ALL:ALL) ALL
+sudoedit /etc/sudoers # uncomment %wheel ALL=(ALL:ALL) ALL, add Defaults insults, pwfeedback
 usermod -G wheel <user>
 ```
 
@@ -363,29 +363,29 @@ We use hyprland as our WM
 - Wallpapers | `#hyprpaper` (`swww` for fancier?)
 - Compositor | `hyprland qt5-wayland qt6-wayland`
 - XDG Integration | `xdg-utils xdg-desktop-portal-hyprland`
+- Color Picker | `hyprpicker`
 
 ```bash
 todo idk
 ```
 
+todo document hyprlock, hypridle, hyprgrass, see others t
+
 todo firefox nightly
 
 TODO
 
-- Compositor | `hyprland qt5-wayland qt6-wayland`
-- XDG Integration | `xdg-utils xdg-desktop-portal-hyprland`
 - Status Bars | TODO
-- Wallpapers | TODO hyprpaper?
 - Notification System | `dunst libnotify`
 - Session Locker | TODO hyprlock?
 - Font Input | TODO look into `fcitx5 fcitx5-chinese-addons fcitx5-configtool fcitx-gtk fcitx5-pinyin-zhwiki fcitx5-qt mozc`
 - App Launcher | TODO look into
-- Pipewire | `pipewire wireplumber pipewire-jack pipewire-pulse`
 - Display Manager | TODO
 - Color Temperature | `gammastep`
 - Booting Animation | TODO how does this work `plymouth`
-- Color Picker `hyprpicker`
 - Polkit | TODO `polkit-kde-agent` does an alternative exist yet?
+
+todo look into `hyprpolkitagent hyprsunset hypridle hyprsysteminfo`
 
 - Fonts | `nerd-fonts`
 <!-- ttf-ms-fonts noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra ttf-jetbrains-mono-nerd ttf-jetbrains-mono ttf-iosevka-nerd` -->
@@ -424,7 +424,7 @@ Here's a list of some other commands
 - ls replacement | `!eza #vivid` 
   - add `LS_COLORS=$(vivid generate catppiccin mocha)` to `.zshrc`, needs `nerdfont`
 - Find | `fzf ripgrep`
-- Git Info | `onefetch`
+- Git Info | `onefetch git-delta fastfetch hyfetch hyprsysteminfo`
 - Requests | `httpie`
 - Ping | `gping`
 - Command Info | `tldr man-db`
@@ -452,6 +452,8 @@ Here's a list of some other commands
 And now we set some aliases in `$ZSH_CUSTOM/alias.zsh`
 ```zsh
 alias ez="eza -lah --no-user --icons=always --group-directories-first"
+alias neofetch="neowofetch"
+
 alias hibernate="sudo systemctl hibernate"
 alias sleep="sudo systemctl suspend"
 alias poweroff="sudo systemctl poweroff"
@@ -462,6 +464,8 @@ alias restart="sudo systemctl reboot"
 
 copy `/etc/chrony.conf`
 copy new .zshrc
+
+look into fingerprint
 
 boot change protections look into chkboot
 look into backups
