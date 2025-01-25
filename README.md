@@ -379,17 +379,41 @@ For our terminal, we use alacritty. | `alacritty`
 We then install zsh and some plugins | `zsh`
 ```bash
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git /home/<user>/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git /home/<user>/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-git clone https://github.com/zsh-users/zsh-syntax-completions.git /home/<user>/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+cd ~/.oh-my-zsh/plugins/
+git clone https://github.com/zsh-users/zsh-autosuggestions.git
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
+git clone https://github.com/zsh-users/zsh-completions.git
 # rm .bash_history .bash_logout .bash_profile .bashrc
 ```
+We now add these plugins and more to `.zshrc`
+```
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting zsh-completions zsh-autosuggestions colored-man-pages sudo)
+```
 
-And also here's some random terminal things :D
+Here's a list of some other commands
+- Find | `fzf ripgrep`
+- Git Info | `onefetch`
+- Command Info | `tldr man-db`
+- Youtube Downloader | `yt-dlp`
+- System Information | `neofetch`
+
 - Random silly terminal commands | `cowsay fortune-mod sl`
-- Fancy displays | `cbonsai pipes.sh cava`
+- Fancy silly terminal things | `cbonsai pipes.sh cava`
 
-TODO
+And now we set some aliases
+```
+alias pipesh="pipes.sh -r 0 -R -K -f 100"
+alias sl="sl -e"
+
+alias hibernate="systemctl hibernate"
+alias sleep="systemctl suspend"
+alias poweroff="systemctl poweroff"
+alias restart="reboot now"
+```
+
+TODO cava conf
+
+theme ohmyzsh more
 
 - Replace cat | `bat`
 - Replace ls | `exa`
@@ -400,6 +424,9 @@ TODO
 - Command Info | `tldr man-db`
 - Youtube Downloader | `yt-dlp`
 - System Information | `htop neofetch duf bandwhich`
+
+Finally here's some aliases
+
 
 # TO PROCESS
 
