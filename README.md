@@ -430,7 +430,7 @@ Here's a list of some other commands
 - Command Info | `tldr man-db`
 - Downloading | `yt-dlp wget`
 - Git Info | `!#git-delta`
-  - Add the following to `.gitconfig` and install Catpuccin
+  - Add the following to `.gitconfig` and install catppuccin
 ```
 [core]
         pager = delta
@@ -473,8 +473,6 @@ look into backups
 
 cava conf
 
-# TO PROCESS
-
 try blurring things again
 
 look into fonts
@@ -500,25 +498,6 @@ curl -fsSL https://raw.githubusercontent.com/spicetify/spicetify-marketplace/mai
 
 # von
 #git clone https://github.com/Incompleteusern/von/
-
-cat <<EOT >> /home/"$USER"/.gitconfig
-[core]
-    pager = delta
-
-[interactive]
-    diffFilter = delta --color-only
-
-[delta]
-    navigate = true    # use n and N to move between diff sections
-    light = false      # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)
-    line-numbers = true
-    side-by-side = true
-[merge]
-    conflictstyle = diff3
-
-[diff]
-    colorMoved = default
-EOT
 
 # More to process
 
