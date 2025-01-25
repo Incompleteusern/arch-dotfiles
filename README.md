@@ -357,12 +357,11 @@ We install `hyprland`
 todo idk
 ```
 
-We install a terminal `alacritty`.
-
 ## TODO
 
 copy `/etc/reflector.conf`
 copy `/etc/chrony.conf`
+copy new .zshrc
 
 boot change protections look into chkboot
 look into backups
@@ -376,6 +375,22 @@ cava conf
 
 # Command Line
 
+For our terminal, we use alacritty. | `alacritty`
+We then install zsh and some plugins | `zsh`
+```bash
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git /home/<user>/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git /home/<user>/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+git clone https://github.com/zsh-users/zsh-syntax-completions.git /home/<user>/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+# rm .bash_history .bash_logout .bash_profile .bashrc
+```
+
+And also here's some random terminal things :D
+- Random silly terminal commands | `cowsay fortune-mod sl`
+- Fancy displays | `cbonsai pipes.sh cava`
+
+TODO
+
 - Replace cat | `bat`
 - Replace ls | `exa`
 - Find | `fzf`, `fd`
@@ -386,18 +401,7 @@ cava conf
 - Youtube Downloader | `yt-dlp`
 - System Information | `htop neofetch duf bandwhich`
 
-And also here's some random terminal things :D
-- Random silly terminal commands | `cowsay fortune-mod sl`
-- Fancy displays | `cbonsai pipes.sh cava`
-
 # TO PROCESS
-
-# zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-/home/"$USER"/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-git clone https://github.com/zsh-users/zsh-autosuggestions.git ${ZSH_CUSTOM:-/home/"$USER"/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-git clone https://github.com/zsh-users/zsh-completions.git ${ZSH_CUSTOM:-/home/"$USER"/.oh-my-zsh/custom}/plugins/zsh-completions
-rm .bash_history .bash_logout .bash_profile .bashrc
 
 # papirus folders
 papirus-folders -C pink --theme Papirus
