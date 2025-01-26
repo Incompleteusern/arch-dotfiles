@@ -8,7 +8,7 @@ This is a work in progress.
 - Text Editor: a mess really, vscode and jetbrains and nvim are all good except for I am too lazy for nvim
 - Color Scheme: `catppuccin`
 - Terminal: `alacritty`
-- More allegiances to come in the future :|.
+- More allegiances to come in the future :|
 
 # References
 
@@ -464,6 +464,8 @@ alias restart="sudo systemctl reboot"
 
 copy `/etc/chrony.conf`
 copy new .zshrc
+
+look into tearing
 
 look into fingerprint
 
