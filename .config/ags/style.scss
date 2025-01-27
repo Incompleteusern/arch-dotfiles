@@ -1,0 +1,240 @@
+// https://gitlab.gnome.org/GNOME/gtk/-/blob/gtk-3-24/gtk/theme/Adwaita/_colors-public.scss
+$fg-color: #{"@theme_fg_color"};
+$bg-color: #{"@theme_bg_color"};
+
+@use "sass:color";
+
+
+$rosewater: #f5e0dc;
+$flamingo: #f2cdcd;
+$pink: #f5c2e7;
+$mauve: #cba6f7;
+$red: #f38ba8;
+$maroon: #eba0ac;
+$peach: #fab387;
+$yellow: #f9e2af;
+$green: #a6e3a1;
+$teal: #94e2d5;
+$sky: #89dceb;
+$sapphire: #74c7ec;
+$blue: #89b4fa;
+$lavender: #b4befe;
+$text: #cdd6f4;
+$subtext1: #bac2de;
+$subtext0: #a6adc8;
+$overlay2: #9399b2;
+$overlay1: #7f849c;
+$overlay0: #6c7086;
+$surface2: #585b70;
+$surface1: #45475a;
+$surface0: #313244;
+$base: #1e1e2e;
+$mantle: #181825;
+$crust: #11111b;
+
+$bg: $base;
+$fg: $text;
+$accent: $pink;
+$radius: 7px;
+
+tooltip {
+    * {
+        all: unset;
+        margin: 0em;
+        padding: 0em;
+    }
+
+    & {
+    font-family: 'JetBrains Mono';
+    font-size: 10px;
+    background-color: $mantle;
+    border-color: $pink;
+    text-shadow: none;
+    color: $text;
+    }
+}
+
+box.bar-box {
+    background-color: $crust;
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
+    padding-top: 0.1em;
+    padding-bottom: 0.1em;
+    border-radius: $radius;
+}
+
+label.text-mid {
+    font-size: 0.7em;
+    font-family: 'JetBrains Mono';
+}
+
+// TODO work on
+scrollable {
+    border-width: 0px;
+
+    .frame {
+        border-width: 0px;
+    }
+    
+    scrollbar.overlay-indicator {
+        background-color: $mantle;
+        border-color: $overlay1;
+
+        contents trough slider {
+            background-color: $red;
+        }
+    }
+
+    scrollbar.overlay-indicator:hover {
+
+        contents trough slider {
+            background-color: $sky;            
+        }
+    }
+}
+
+window.Bar {
+    border: none;
+    box-shadow: none;
+    background-color: $crust;
+    color: $text;
+    font-size: 1.1em;
+    font-weight: bold;
+
+    label {
+        margin: 0 8px;
+        font-family: 'JetBrains Mono';
+    }
+
+    .wrapper {
+        border-top-left-radius: $radius;
+        border-top-left-radius: $radius;
+        background-color: $base;
+
+        .Workspaces  {
+            button {
+                all: unset;
+                background-color: transparent;
+
+                &:hover label {
+                    background-color: $mantle;
+                    border-color: $overlay1;
+                }
+
+                &:active label {
+                    background-color: $mantle;
+                }
+            }
+
+            label {
+                transition: 200ms;
+                padding: 0 8px;
+                margin: 2px;
+                border-radius: $radius;
+                border: 1pt solid transparent;
+            }
+
+            .focused label {
+                color: $sky;
+                border-color: $sky;
+            }
+        }
+
+        .SysTray {
+            margin-right: 8px;
+
+            button {
+                padding: 0 4px;
+            }
+
+            border-radius: 3px;
+            padding: 3px;
+        }
+
+        .FocusedClient {
+            color: $teal;
+        }
+
+        .Focused {
+            background-color: $crust;
+            border-top-right-radius: $radius;
+            border-bottom-right-radius: $radius;
+            padding-top: 0;
+            padding-bottom: 0;
+            margin-top: 0;
+            margin-bottom: 0;
+            transition-duration: 1s;
+        
+            label {
+                padding-top: 0;
+                padding-bottom: 0;
+                margin-top: 0;
+                margin-bottom: 0;
+            }
+
+
+            .top-text {
+                font-size: 0.5em;
+                color: $overlay2;
+                margin-top: -0.1em;
+                margin-bottom: -0.1em;
+            }
+
+            .bottom-text {
+                color: $text;
+                font-size: 0.6em;
+            }
+        }
+
+        .Media {
+            .Cover {
+                min-height: 1.1em;
+                min-width: 1.1em;
+                border-radius: $radius;
+                background-position: center;
+                background-size: contain;
+                padding-left: 0.1em;
+                background-size: cover;
+            }
+        }
+
+        .Battery label {
+            padding-left: 0;
+            margin-left: 0;
+        }
+
+        .AudioSlider {
+            * {
+                all: unset;
+            }
+
+            icon {
+                margin-right: .6em;
+                color: $green;
+            }
+
+            & {
+                margin: 0 1em;
+            }
+
+            trough {
+                background-color: color.adjust($fg, $alpha: -0.8);
+                border-radius: $radius;
+            }
+
+            highlight {
+                background-color: $green;
+                min-height: .8em;
+                border-radius: $radius;
+            }
+
+            slider {
+                background-color: $subtext1;
+                border-radius: 0.1em;
+                min-height: .8em;
+                min-width: .8em;
+                margin: -.2em;
+            }
+        }
+    }
+}

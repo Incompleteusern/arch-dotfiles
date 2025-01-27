@@ -366,28 +366,32 @@ We use hyprland as our WM
 - Compositor | `hyprland qt5-wayland qt6-wayland`
 - XDG Integration | `xdg-utils xdg-desktop-portal-hyprland`
 - Color Picker | `hyprpicker`
+- Session Locker | `(hyprlock)`
 
 ```bash
 todo idk
 ```
 
 todo document hyprlock, hypridle, hyprgrass, see others t
-
-todo firefox nightly
+- update hyprland conf after that !
+- parity between lock screen battery and status battery icons, todo look into
 
 TODO
 
-- Status Bars | TODO
-- Notification System | `dunst libnotify`
-- Session Locker | TODO hyprlock?
+- Status Bars | `aylurs-gtk-shell-git`
+- Notification System | `dunst libnotify` TODO replace ags?
 - Font Input | TODO look into `fcitx5 fcitx5-chinese-addons fcitx5-configtool fcitx-gtk fcitx5-pinyin-zhwiki fcitx5-qt mozc`
-- App Launcher | TODO look into
+- App Launcher | TODO look into, replace with ags?
 - Display Manager | TODO
-- Color Temperature | `gammastep`
+- Color Temperature | `hyprsunset`
 - Booting Animation | TODO how does this work `plymouth`
-- Polkit | TODO `polkit-kde-agent` does an alternative exist yet?
+- Polkit | TODO `polkit-kde-agent` does an alternative exist yet? (yest it does look into it
 
 todo look into `hyprpolkitagent hyprsunset hypridle hyprsysteminfo`
+
+grimblast-git, wl-copy
+
+https://archlinux.org/packages/?name=nm-connection-editor?
 
 - Fonts | `nerd-fonts`
 <!-- ttf-ms-fonts noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra ttf-jetbrains-mono-nerd ttf-jetbrains-mono ttf-iosevka-nerd` -->
@@ -480,6 +484,8 @@ look into fingerprint
 boot change protections look into chkboot
 look into backups
 - firewall
+
+todo vi
 
 cava conf
 
