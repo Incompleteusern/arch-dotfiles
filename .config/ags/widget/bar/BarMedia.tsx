@@ -56,6 +56,8 @@ function MediaInfo(player: Mpris.Player) {
         />))}
         {<label
             className="text-mid"
+            maxWidthChars={40}
+            truncate={true}
             label={bind(display)}
         />}
     </box>
@@ -73,7 +75,7 @@ export function Media() {
                 <label
                     className="text-mid"
                 >
-                    Nothing Playing
+                    No Media
                 </label>
             )
         })}

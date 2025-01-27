@@ -367,12 +367,13 @@ We use hyprland as our WM
 - XDG Integration | `xdg-utils xdg-desktop-portal-hyprland`
 - Color Picker | `hyprpicker`
 - Session Locker | `(hyprlock)`
+- Hypr Plugins and Eco | `glaze hyprsunser hypridle`
 
 ```bash
 todo idk
 ```
 
-todo document hyprlock, hypridle, hyprgrass, see others t
+todo document hyprlock, hypridle, hyprgrass, see others t, hyprbars
 - update hyprland conf after that !
 - parity between lock screen battery and status battery icons, todo look into
 
