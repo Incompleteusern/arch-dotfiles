@@ -1,5 +1,7 @@
 This is a work in progress.
 
+Current computer: 83DJ (Yoga 7 2-in-1 14IML9)
+
 # "Allegiances"
 
 - Pacman Wrapper: `paru`, used `yay` and want to test it out
@@ -460,6 +462,12 @@ alias poweroff="sudo systemctl poweroff"
 alias restart="sudo systemctl reboot"
 ```
 
+# Applications
+
+Not much to say
+- firefox | `firefox`
+- vlc | `vlc`
+
 # TODO
 
 copy `/etc/chrony.conf`
@@ -474,6 +482,8 @@ look into backups
 - firewall
 
 cava conf
+
+override mod+shift+s to screenshots
 
 try blurring things again
 
@@ -518,27 +528,25 @@ curl -fsSL https://raw.githubusercontent.com/spicetify/spicetify-marketplace/mai
 
 TODO:
 
-- update to hyprutils-git, hyprcurosr-git, hyprlang-git, hyprwayland-scanner-git:
-- pamixer to wpctl
+- hyprcursor and wayland scanner or something
 - document ripgrep
-- https://github.com/end-4/dots-hyprland/tree/illogical-impulse replace eww and try it out
+- https://github.com/end-4/dots-hyprland/tree/illogical-impulse keep copying tm
 - https://github.com/tkashkin/Adwaita-for-Steam
-- im sick of the wallpaper changing, find one wall paper i love and keep it forever
-- update wallpapers to get rid of ones I don't like, your name wallpapers
 - https://github.com/NoiSek/Aether
 - qbittorrent?
 - keepassxc
 - Customize nvim (not for now)
 - https://wiki.archlinux.org/title/laptop#Hibernate_on_low_battery_level
+	- or on idle tbh
 - Stop bundling `.sty` or something
 - Document https://wiki.archlinux.org/title/OpenSSH#Deny
 - Firewall
 - https://wiki.archlinux.org/title/Improving_performance
 - Customize oh-my-zsh more
 - https://wiki.archlinux.org/title/Makepkg#Tips_and_tricks
-- Test untested parts (NEVER)
 - Get spotify to work for local files
 - look into musicbee
+- take a look at gnome controll center
 
 # Desktop
 
