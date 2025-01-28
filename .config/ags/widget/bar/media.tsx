@@ -4,6 +4,7 @@ import Mpris from "gi://AstalMpris"
 import { truncate } from "../../utils/StringUtils";
 
 const priorityList: string[] = [
+    "Spotify",
     "Mozilla firefox",
 ];
 

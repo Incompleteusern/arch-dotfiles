@@ -76,6 +76,7 @@ export const Workspaces = () => {
 
                 self.hook(display, applyCssToWs);
                 self.hook(hypr, "client-added", applyCssToWs);
+                self.hook(hypr, "client-moved", applyCssToWs);
                 self.hook(hypr, "client-removed", applyCssToWs);
                 self.hook(_fw, genChildren);
             }}
