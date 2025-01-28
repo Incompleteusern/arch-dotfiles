@@ -1,14 +1,16 @@
 import { Variable, GLib, bind, exec } from "astal"
-import { Astal, Gtk, Gdk } from "astal/gtk3"
+import { Astal, Gtk, Gdk, Widget } from "astal/gtk3"
 import Hyprland from "gi://AstalHyprland"
 import Battery from "gi://AstalBattery"
 import Wp from "gi://AstalWp"
 import Network from "gi://AstalNetwork"
 import Tray from "gi://AstalTray"
 import { Label } from "astal/gtk3/widget"
-import { Media } from "./BarMedia"
+import { Media } from "./media"
+import Workspaces from "./workspaces"
 
 // TODO
+// look into popup code
 // steal work space code from https://github.com/kotontrion/dotfiles/blob/main/.config/ags/modules/workspaces/hyprland.js
 // move sound slider to subwidget
 // add brightness slider
@@ -19,6 +21,11 @@ import { Media } from "./BarMedia"
 // sleep, restart, lock, shutdown, hibernate
 // nightlight
 // bluetooth
+
+// look into event boxes
+// look into input shapes
+
+// copy format for time clock thing
 
 function SysTray() {
     const tray = Tray.get_default()
@@ -45,7 +52,7 @@ function Wifi() {
     return <box visible={wifi.as(Boolean)}>
         {wifi.as(wifi => wifi && (
             <icon
-                tooltipText={bind(wifi, "ssid").as(String)}
+                tooltipText={bind(wifi, "ssid").as(ssid => ssid ?? "None")}
                 className="Wifi"
                 icon={bind(wifi, "iconName")}
             />
@@ -75,70 +82,37 @@ function BatteryLevel() {
         <icon icon={bind(bat, "batteryIconName")} />
         <label label={bind(bat, "percentage").as(p =>
             `${Math.floor(p * 100)}%`
-        )} />
-    </box>
-}
-
-function Workspaces() {
-    const hypr = Hyprland.get_default()
-
-    return <box className="Workspaces">
-        {bind(hypr, "workspaces").as(wss => wss
-            .filter(ws => !(ws.id >= -99 && ws.id <= -2)) // filter out special workspaces
-            .sort((a, b) => a.id - b.id)
-            .map(ws => (
-                <button
-                    className={bind(hypr, "focusedWorkspace").as(fw =>
-                        ws === fw ? "focused" : "")}
-                    onClicked={() => ws.focus()}>
-                    {ws.id}
-                </button>
-            ))
-        )}
+        )} className={"text-mid"} />
     </box>
 }
 
 function FocusedClient() {
     const hypr = Hyprland.get_default()
-    const focused = bind(hypr, "focusedClient")
-    
-    return <box
-            className="Focused"
-                vertical={true}
-                spacing={0}
-                widthRequest={150}
-            >
-                {focused.as(client => {
-                    let label: Label = <label
-                        xalign={0}
-                        maxWidthChars={20}
-                        truncate={true}
-                        className={"top-text"}
-                    /> as Label
-                    
-                    const m = !client ? 'Desktop' : client.class;
-                    label.label = m;
-                    label.tooltipText = m;
+    const focusedClient = bind(hypr, "focusedClient");
+    const focusedWorkspace = bind(hypr, "focusedWorkspace");
 
-                    return label;
-                })}
-
-                {focused.as(client => {
-                    let label: Label = <label
-                        xalign={0}
-                        maxWidthChars={20}
-                        truncate={true}
-                        className={"bottom-text"}
-                    /> as Label
-
-                    const m = !client ? `Workspace ${hypr.focusedWorkspace.id}` : client.title;
-                    label.label = m;
-                    label.tooltipText = m;
-
-                    return label;
-                    
-                })}
-        </box>
+    // @ts-ignore
+    return (focusedClient.as(focusedClient => <box
+            className="Focused leftrect"
+            vertical={true}
+            spacing={0}
+            widthRequest={150}
+        >
+            <label
+                xalign={0}
+                maxWidthChars={20}
+                truncate={true}
+                className={"top-text"}
+                label={focusedClient ? bind(focusedClient, "class") : 'Desktop'}
+            />
+            <label
+                xalign={0}
+                maxWidthChars={20}
+                truncate={true}
+                className={"bottom-text"}
+                label={focusedClient ? bind(focusedClient, "title") : focusedWorkspace.as(ws => `Workspace ${ws.id}`)}
+            />
+        </box>)) as Gtk.Widget;
 }
 
 function Time({ format = "%H:%M - %a, %b %e" }) {
@@ -146,7 +120,7 @@ function Time({ format = "%H:%M - %a, %b %e" }) {
         GLib.DateTime.new_now_local().format(format)!)
 
     return <box
-        className="Time"
+        className="Time rightrect"
     >
         <label
             className="text-mid"
@@ -157,20 +131,20 @@ function Time({ format = "%H:%M - %a, %b %e" }) {
 }
 
 const Left = () => 
-    <box hexpand halign={Gtk.Align.START}>
+    <box className="wrap-box leftrect" hexpand halign={Gtk.Align.START}>
         <FocusedClient />
         <Workspaces />
     </box>
 
 
 const Medium = () =>
-    <box>
+    <box className="wrap-box">
         <Media />
     </box>
 
 
 const Right = () => 
-    <box hexpand halign={Gtk.Align.END}>
+    <box className="wrap-box rightrect" hexpand halign={Gtk.Align.END}>
         <box className="bar-box">
             <Wifi />
             <AudioSlider />

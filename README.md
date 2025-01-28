@@ -30,9 +30,10 @@ This has the arch install guide as a reference as well as
 | Linux Extended Boot | 1 GB  | xbootldr | BOOT | fat32 |
 | Linux Partition | Remainder  | fd | cryptlvm | volume |
 
-* Make partitions with fdisk or cfdisk, and label them with gdisk
-* I am dual booting so an EFI file system exists already which I will use and not touch with a ten foot pole, so this is why we have an extended boot partition.
-* I am an idiot and I also want to try about btrfs so this goes hand in hand
+Make partitions with fdisk or cfdisk, and label them with gdisk.
+
+> [!NOTE]  
+> I reuse my already existing EFI partition for bootloading.
 
 ## Filesystems
 
@@ -42,7 +43,12 @@ We first overrwrite the Linux Partition with random data for security reasons:
 ```bash
 dd if=/dev/urandom of=/dev/disk/by-partlabel/cryptlvm bs=1M status=progress
 ```
-where `of` is the desired disk to outout to. Now, we set up the luks container.
+where `of` is the desired disk to outout to.
+
+> [!WARNING]  
+> Check the existing `of` beforehand!
+
+ Now, we set up the luks container.
 ```bash
 # cryptsetup benchmark # benchmark cryptsetup if you want
 
@@ -116,6 +122,9 @@ echo "<hostname>" >> /etc/hostname # and corresponding hostname
 
 passwd # set root password
 ```
+
+> [!WARNING]  
+> If you forget to set the root password, you won't have a way to boot in to your system!
 
 ##  Booting
 
@@ -197,7 +206,7 @@ Regenerate initramfs after this and re-enable secure boot.
 
 ## TPM
 
-We can now enroll our luks key into TPM (which is pretty secure modulo some privacy things that probably only matter if you are running from a government) to not need to enter our password each time. Secure boot should be on for this.
+We can now enroll our luks key into TPM to not need to enter our password each time. Secure boot should be on for this.
 
 Make sure `cat /sys/class/tpm/tpm0/tpm_version_major` outputs 2.
 
@@ -212,6 +221,11 @@ systemd-cryptenroll --recovery-key /dev/disk/by-partlabel/cryptlvm # Generate a 
 systemd-cryptenroll --tpm2-device=auto /dev/disk/by-partlabel/cryptlvm --tpm2-pcrs=0+7 # 0 can be omitted
 # systemd-cryptenroll /dev/disk/by-partlabel/cryptlvm --wipe-slot=password # wipe the password if necessary
 ```
+
+> [!WARNING]  
+> TPM isn't 100% guarentee safety or whatever, see the documentation for security if you ccre about that.
+> Choosing other PCRs might guarentee more safety, unsure.
+
 Afterwards, add `rd.luks.options=<DEVICE-UUID>=tpm2-device=auto` to the entries to avoid entering the password again (editting `crypttab.initramfs` is an alternative). Add the kernel module to 
 `MODULES=`, like below
 ```
@@ -291,7 +305,7 @@ git config --global user.name "$name"
 
 ## Operating System
 
-We enable some SSD things here, see [this link](https://wiki.archlinux.org/title/Dm-crypt/Specialties#Disable_workqueue_for_increased_solid_state_drive_(SSD)_performance) and [this one](https://wiki.archlinux.org/title/Dm-crypt/Specialties#Discard/TRIM_support_for_solid_state_drives_(SSD)) (read these links for security info).
+We enable some SSD things here in our encrypted environment.,
 
 ```bash
 cryptsetup --allow-discards --persistent  --perf-no_read_workqueue --perf-no_write_workqueue refresh lvm
@@ -299,6 +313,9 @@ cryptsetup luksDump /dev/disk/by-partlabel/cryptlvm | grep Flags # confirm
 systemctl enable fstrim.timer
 ```
 (tpm2 doesn't work for these commands it seems).
+
+>[!INFO]
+>  TPM2 doesn't seem to work for these commands, so keeping a password is likely best. See [this link](https://wiki.archlinux.org/title/Dm-crypt/Specialties#Disable_workqueue_for_increased_solid_state_drive_(SSD)_performance) and [this one](https://wiki.archlinux.org/title/Dm-crypt/Specialties#Discard/TRIM_support_for_solid_state_drives_(SSD)) for security info.
 
 ### Intel
 
@@ -366,16 +383,15 @@ We use hyprland as our WM
 - Compositor | `hyprland qt5-wayland qt6-wayland`
 - XDG Integration | `xdg-utils xdg-desktop-portal-hyprland`
 - Color Picker | `hyprpicker`
-- Session Locker | `(hyprlock)`
+- Idler and Session Locker | `(hypridle) (hyprlock)`
 - Hypr Plugins and Eco | `glaze hyprsunser hypridle`
 
 ```bash
 todo idk
 ```
 
-todo document hyprlock, hypridle, hyprgrass, see others t, hyprbars
+todo document hyprlock, hyprgrass, check out hyprbars
 - update hyprland conf after that !
-- parity between lock screen battery and status battery icons, todo look into
 
 TODO
 

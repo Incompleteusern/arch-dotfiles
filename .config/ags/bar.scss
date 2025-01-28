@@ -1,0 +1,246 @@
+@use "global.scss" as *;
+
+window.Bar {
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    // background-color: $crust;
+    margin-top: 0rem;
+    color: $text;
+    font-size: 1.1rem;
+    font-weight: bold;
+
+    label {
+        // margin: 0 8px;
+        font-family: 'JetBrains Mono';
+    }
+
+    box.wrap-box {
+        background-color: $base;
+        margin-top: 0.2rem;
+        padding-top: 0.2rem;
+        padding-bottom: 0.1rem;
+        padding-left: 0.2rem;
+        padding-right: 0.2rem;
+        margin-left: 0.1rem;
+        margin-right: 0.1rem;
+
+        border-radius: $radius;
+    }
+
+    box.bar-box {
+        background-color: $crust;
+        margin-top: 0.2rem;
+        margin-bottom: 0.2rem;
+        padding-top: 0.1rem;
+        padding-bottom: 0.1rem;
+        padding-left: 0.3rem;
+        padding-right: 0.3rem;
+        margin-left: 0.2rem;
+        margin-right: 0.2rem;
+
+        border-radius: $radius;
+    }
+
+    box.leftrect {
+        padding-left: 0rem;
+        margin-left: 0rem;
+        border-top-left-radius: 0rem;
+        border-bottom-left-radius: 0rem;
+
+        border-top-right-radius: $radius;
+        border-bottom-right-radius: $radius;
+    }
+
+    box.rightrect {
+        padding-right: 0rem;
+        margin-right: 0rem;
+        border-top-right-radius: 0rem;
+        border-bottom-right-radius: 0rem;
+
+        border-top-left-radius: $radius;
+        border-bottom-left-radius: $radius;
+    }
+
+    .wrapper {
+        margin-top: 0rem;
+        padding-top: 0rem;
+        border-top-left-radius: $radius;
+        border-top-left-radius: $radius;
+        // background-color: $base;
+
+
+        .SysTray {
+            margin-right: 8px;
+
+            button {
+                padding: 0 4px;
+            }
+
+            border-radius: 3px;
+            padding: 3px;
+        }
+
+        .FocusedClient {
+            color: $teal;
+        }
+
+        .Focused {
+            background-color: $crust;
+            margin-top: -0.2rem;
+            margin-bottom: -0.1rem;
+            margin-right: 0.1rem;
+
+            label {
+                padding-top: 0;
+                padding-bottom: 0;
+                margin-top: 0;
+                margin-bottom: 0;
+            }
+
+            .top-text {
+                font-size: 0.6rem;
+                color: $overlay2;
+                margin-top: 0.2rem;
+                margin-bottom: -0.1rem;
+                margin-left: 0.4rem;
+            }
+
+            .bottom-text {
+                color: $text;
+                font-size: 0.8rem;
+                margin-left: 0.4rem;
+            }
+        }
+
+        .Media {
+            .Cover {
+                min-height: 1.3rem;
+                min-width: 1.3rem;
+                border-radius: $radius;
+                background-position: center;
+                background-size: contain;
+                padding-left: 0.1rem;
+                background-size: cover;
+            }
+        }
+
+
+        .Battery {
+            label {
+                padding-left: 0;
+                margin-left: 0;
+            }
+
+            color: $rosewater;
+        }
+
+        .Wifi {
+            color: $lavender;
+        }
+
+        .AudioSlider {
+            * {
+                all: unset;
+            }
+
+            icon {
+                margin-right: .6rem;
+                color: $green;
+            }
+
+            & {
+                margin: 0 0.5rem;
+            }
+
+            trough {
+                background-color: $overlay1;
+                border-radius: $radius;
+            }
+
+            highlight {
+                background-color: $green;
+                min-height: .8rem;
+                border-radius: $radius;
+            }
+
+            slider {
+                background-color: $subtext1;
+                border-radius: 0.2rem;
+                min-height: .85rem;
+                min-width: .85rem;
+                margin: -.2rem;
+            }
+        }
+
+
+        .Time {
+            margin-top: -0.2rem;
+            margin-bottom: -0.1rem;
+
+            background-color: $crust;
+            margin-left: 0.1em;
+        }
+    }
+
+    .ws-container {
+        button {
+            all: unset;
+            background-color: transparent;
+
+            
+            &:hover label {
+                // background-color: $mantle;
+                border-color: $overlay1;
+                color: $lavender;
+            }
+            
+        }
+
+        label {
+            padding: 0 2px;
+            margin: 0 0;
+            border: 0;
+        }
+
+        background-color: $maroon;
+        padding: 3px;
+      
+        & .ws-button {
+          &.occupied {
+            background-color: $mantle;
+            border-top: 1px solid $pink;
+            border-bottom: 1px solid $pink;
+      
+            &.occupied-left {
+              border-bottom-left-radius: $radius;
+              border-top-left-radius:$radius;
+              border-left: 1px solid $pink;
+            }
+      
+            &.occupied-right {
+              border-bottom-right-radius:$radius;
+              border-top-right-radius: $radius;
+              border-right: 1px solid $pink;
+            }
+          }
+            
+          &.active {
+            margin: 0rem;
+
+            .ws-button-label {
+              color: $crust;
+              background-color: $pink;
+
+              border-radius: 8px; // i cant be bothered to fix this rn
+            }
+
+          }
+      
+          .ws-button-label {
+            min-width: 1.6rem;
+          }
+      
+        }
+    }
+}
