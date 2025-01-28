@@ -4,7 +4,7 @@ Current computer: 83DJ (Yoga 7 2-in-1 14IML9)
 
 # "Allegiances"
 
-- Pacman Wrapper: `paru`, used `yay` and want to test it out
+- Pacman Wrapper: `paru`
 - Networking: `networkmanager`
 - Window Manager: `Hyprland`
 - Text Editor: a mess really, vscode and jetbrains and nvim are all good except for I am too lazy for nvim
@@ -384,14 +384,14 @@ We use hyprland as our WM
 - XDG Integration | `xdg-utils xdg-desktop-portal-hyprland`
 - Color Picker | `hyprpicker`
 - Idler and Session Locker | `(hypridle) (hyprlock)`
-- Hypr Plugins and Eco | `glaze hyprsunser hypridle`
+- Color Temperature | `glaze hyprsunset`
+- Other | `hyprsysteminfo`
+- Plugins | hyprspace
+- Polkit | TODO `polkit-kde-agent` does an alternative exist yet? (yest it does look into it
 
 ```bash
 todo idk
 ```
-
-todo document hyprlock, hyprgrass, check out hyprbars
-- update hyprland conf after that !
 
 TODO
 
@@ -402,9 +402,8 @@ TODO
 - Display Manager | TODO
 - Color Temperature | `hyprsunset`
 - Booting Animation | TODO how does this work `plymouth`
-- Polkit | TODO `polkit-kde-agent` does an alternative exist yet? (yest it does look into it
 
-todo look into `hyprpolkitagent hyprsunset hypridle hyprsysteminfo`
+hyprsunset
 
 grimblast-git, wl-copy
 
@@ -447,7 +446,7 @@ Here's a list of some other commands
 - ls replacement | `!eza #vivid` 
   - add `LS_COLORS=$(vivid generate catppiccin mocha)` to `.zshrc`, needs `nerdfont`
 - Find | `fzf ripgrep`
-- Git Info | `onefetch git-delta fastfetch hyfetch hyprsysteminfo`
+- System Info | `onefetch git-delta fastfetch hyfetch`
 - Requests | `httpie`
 - Ping | `gping`
 - Command Info | `tldr man-db`
@@ -552,24 +551,21 @@ curl -fsSL https://raw.githubusercontent.com/spicetify/spicetify-marketplace/mai
 TODO:
 
 - hyprcursor and wayland scanner or something
-- document ripgrep
 - https://github.com/end-4/dots-hyprland/tree/illogical-impulse keep copying tm
 - https://github.com/tkashkin/Adwaita-for-Steam
-- https://github.com/NoiSek/Aether
+- common greetd and replace hyprlock someday
 - qbittorrent?
 - keepassxc
 - Customize nvim (not for now)
 - https://wiki.archlinux.org/title/laptop#Hibernate_on_low_battery_level
 	- or on idle tbh
-- Stop bundling `.sty` or something
 - Document https://wiki.archlinux.org/title/OpenSSH#Deny
 - Firewall
 - https://wiki.archlinux.org/title/Improving_performance
 - Customize oh-my-zsh more
 - https://wiki.archlinux.org/title/Makepkg#Tips_and_tricks
 - Get spotify to work for local files
-- look into musicbee
-- take a look at gnome controll center
+- take a look at gnome control center
 
 # Desktop
 
@@ -601,9 +597,10 @@ TODO:
 - Booting Animation | TODO how does this work `plymouth`
 - Color Picker `hyprpicker`
 - Polkit | TODO `polkit-kde-agent` does an alternative exist yet?
+- Fonts | `nerd-fonts noto-fonts-cjk`
 
 - Fonts | `nerd-fonts`
-<!-- ttf-ms-fonts noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra ttf-jetbrains-mono-nerd ttf-jetbrains-mono ttf-iosevka-nerd` -->
+<!-- ttf-ms-fonts noto-fonts noto-fonts-emoji noto-fonts-extra ttf-jetbrains-mono-nerd ttf-jetbrains-mono ttf-iosevka-nerd` -->
   - Set Chinese as font priority
 - Screenshots | `grimblast-git`
 - Spotify Integration | `playerctl`
@@ -622,7 +619,6 @@ TODO:
   - Do https://wiki.archlinux.org/title/avahi#hostname_resolution
   - todo automate, move to installation section too?
 - enable firefox hardware acceleration, reopen tabs on close
-  - TODO automate?
 
 ## Auto
 

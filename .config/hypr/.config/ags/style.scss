@@ -1,0 +1,60 @@
+// https://gitlab.gnome.org/GNOME/gtk/-/blob/gtk-3-24/gtk/theme/Adwaita/_colors-public.scss
+$fg-color: #{"@theme_fg_color"};
+$bg-color: #{"@theme_bg_color"};
+
+@use "sass:color";
+
+@use "global.scss" as *;
+
+@use "bar.scss";
+
+tooltip {
+    * {
+        all: unset;
+        margin: 0rem;
+        padding: 0rem;
+    }
+
+    & {
+    font-family: 'JetBrains Mono';
+    font-size: 10px;
+    background-color: $mantle;
+    border-color: $pink;
+    text-shadow: none;
+    color: $text;
+    }
+}
+
+
+label.text-mid {
+    font-size: 0.7rem;
+    margin: 0 0.3rem;
+    font-family: 'JetBrains Mono';
+}
+
+// TODO work on
+scrollable {
+    border-width: 0px;
+
+    .frame {
+        border-width: 0px;
+    }
+    
+    scrollbar.overlay-indicator {
+        background-color: $mantle;
+        border-color: $overlay1;
+
+        contents trough slider {
+            background-color: $red;
+        }
+    }
+
+    scrollbar.overlay-indicator:hover {
+
+        contents trough slider {
+            background-color: $sky;            
+        }
+    }
+}
+
+
