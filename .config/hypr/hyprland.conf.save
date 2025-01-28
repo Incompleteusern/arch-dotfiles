@@ -45,7 +45,7 @@ exec-once = swww-daemon &
 # exec-once = nm-applet &
 # exec-once = waybar & hyprpaper & 
 exec-once = firefox
-exec-once = ags &
+
 
 #############################
 ### ENVIRONMENT VARIABLES ###
@@ -99,6 +99,8 @@ decoration {
     rounding = 10
 
     # Change transparency of focused and unfocused windows
+    active_opacity = 1
+    inactive_opacity = 0.9
     dim_inactive = true
     dim_strength = 0.05
 
@@ -176,7 +178,6 @@ misc {
     force_default_wallpaper = 2 # Set to 0 or 1 to disable the anime mascot wallpapers
     disable_hyprland_logo = true # If true disables the random hyprland logo / anime girl background. :(
     disable_splash_rendering = true
-    vfr = true
     vrr = 2
     background_color = $crust
     initial_workspace_tracking = 2

@@ -141,15 +141,19 @@ function FocusedClient() {
         </box>
 }
 
-function Time({ format = "%H:%M - %A %e." }) {
+function Time({ format = "%H:%M - %a, %b %e" }) {
     const time = Variable<string>("").poll(1000, () =>
         GLib.DateTime.new_now_local().format(format)!)
 
-    return <label
+    return <box
         className="Time"
-        onDestroy={() => time.drop()}
-        label={time()}
-    />
+    >
+        <label
+            className="text-mid"
+            onDestroy={() => time.drop()}
+            label={time()}
+        />
+    </box>
 }
 
 const Left = () => 
@@ -167,9 +171,11 @@ const Medium = () =>
 
 const Right = () => 
     <box hexpand halign={Gtk.Align.END}>
-        <Wifi />
-        <AudioSlider />
-        <BatteryLevel />
+        <box className="bar-box">
+            <Wifi />
+            <AudioSlider />
+            <BatteryLevel />
+        </box>
         <Time />
     </box>
 

@@ -15,7 +15,7 @@ if [[ ("$status" == "Discharging") || ("$status" == "Full") ]]; then
   elif [[ ("$level" -le "40") ]]; then
     printf "$level%% 󰁽"
   elif [[ ("$level" -le "50") ]]; then
-    printf "$level5% 󰁾"
+    printf "$level%% 󰁾"
   elif [[ ("$level" -le "60") ]]; then
     printf "$level%% 󰁿"
   elif [[ ("$level" -le "70") ]]; then
@@ -29,5 +29,5 @@ if [[ ("$status" == "Discharging") || ("$status" == "Full") ]]; then
 
   fi
 elif [[ "$status" == "Charging" ]]; then
-  printf "$level% 󰂄"
+  printf "$level%% 󰂄"
 fi

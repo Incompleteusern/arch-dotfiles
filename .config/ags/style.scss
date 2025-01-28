@@ -35,13 +35,13 @@ $crust: #11111b;
 $bg: $base;
 $fg: $text;
 $accent: $pink;
-$radius: 7px;
+$radius: 10px;
 
 tooltip {
     * {
         all: unset;
-        margin: 0em;
-        padding: 0em;
+        margin: 0rem;
+        padding: 0rem;
     }
 
     & {
@@ -56,15 +56,20 @@ tooltip {
 
 box.bar-box {
     background-color: $crust;
-    margin-top: 0.2em;
-    margin-bottom: 0.2em;
-    padding-top: 0.1em;
-    padding-bottom: 0.1em;
+    margin-top: 0.2rem;
+    margin-bottom: 0.2rem;
+    padding-top: 0.1rem;
+    padding-bottom: 0.1rem;
+    padding-left: 0.2rem;
+    padding-right: 0.2rem;
+    margin-left: 0.2rem;
+    margin-right: 0.2rem;
+
     border-radius: $radius;
 }
 
 label.text-mid {
-    font-size: 0.7em;
+    font-size: 0.7rem;
     font-family: 'JetBrains Mono';
 }
 
@@ -98,7 +103,7 @@ window.Bar {
     box-shadow: none;
     background-color: $crust;
     color: $text;
-    font-size: 1.1em;
+    font-size: 1.1rem;
     font-weight: bold;
 
     label {
@@ -159,10 +164,7 @@ window.Bar {
             background-color: $crust;
             border-top-right-radius: $radius;
             border-bottom-right-radius: $radius;
-            padding-top: 0;
-            padding-bottom: 0;
-            margin-top: 0;
-            margin-bottom: 0;
+            padding-right: 0.1rem;
             transition-duration: 1s;
         
             label {
@@ -174,33 +176,49 @@ window.Bar {
 
 
             .top-text {
-                font-size: 0.5em;
+                font-size: 0.5rem;
                 color: $overlay2;
-                margin-top: -0.1em;
-                margin-bottom: -0.1em;
+                margin-top: -0.1rem;
+                margin-bottom: -0.1rem;
             }
 
             .bottom-text {
                 color: $text;
-                font-size: 0.6em;
+                font-size: 0.6rem;
             }
         }
 
         .Media {
             .Cover {
-                min-height: 1.1em;
-                min-width: 1.1em;
+                min-height: 1.1rem;
+                min-width: 1.1rem;
                 border-radius: $radius;
                 background-position: center;
                 background-size: contain;
-                padding-left: 0.1em;
+                padding-left: 0.1rem;
                 background-size: cover;
             }
         }
 
-        .Battery label {
-            padding-left: 0;
-            margin-left: 0;
+        .Time {
+            background-color: $crust;
+            padding-left: 0.1em;
+            border-top-left-radius: $radius;
+            border-bottom-left-radius: $radius;
+        }
+
+        .Battery {
+            
+            label {
+                padding-left: 0;
+                margin-left: 0;
+            }
+
+            color: $rosewater;
+        }
+
+        .Wifi {
+            color: $lavender;
         }
 
         .AudioSlider {
@@ -209,12 +227,12 @@ window.Bar {
             }
 
             icon {
-                margin-right: .6em;
+                margin-right: .6rem;
                 color: $green;
             }
 
             & {
-                margin: 0 1em;
+                margin: 0 0.5rem;
             }
 
             trough {
@@ -224,16 +242,16 @@ window.Bar {
 
             highlight {
                 background-color: $green;
-                min-height: .8em;
+                min-height: .8rem;
                 border-radius: $radius;
             }
 
             slider {
                 background-color: $subtext1;
-                border-radius: 0.1em;
-                min-height: .8em;
-                min-width: .8em;
-                margin: -.2em;
+                border-radius: 0.2rem;
+                min-height: .85rem;
+                min-width: .85rem;
+                margin: -.2rem;
             }
         }
     }
