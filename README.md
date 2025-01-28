@@ -374,26 +374,23 @@ wifi.cloned-mac-address=random
 
 # Desktop
 
-## work in progress
-
 We use hyprland as our WM
 - Pipewire `pipewire wireplumber pipewure-jack pipewire-pulse pipewire-alsa`
-- Brightness Control | `brightnessctl`
+- Control | `brightnessctl playerctl`
 - Wallpapers | `#hyprpaper` (`swww` for fancier?)
 - Compositor | `hyprland qt5-wayland qt6-wayland`
 - XDG Integration | `xdg-utils xdg-desktop-portal-hyprland`
-- Color Picker | `hyprpicker`
 - Idler and Session Locker | `(hypridle) (hyprlock)`
 - Color Temperature | `glaze hyprsunset`
-- Other | `hyprsysteminfo`
-- Plugins | hyprspace
-- Polkit | TODO `polkit-kde-agent` does an alternative exist yet? (yest it does look into it
+- Other | `hyprsysteminfo hyprpicker` hyprspace
+- Polkit | `hyprpolkitagent`
+- Screenshots | `wl-copy grimblast-git`
 
 ```bash
 todo idk
 ```
 
-TODO
+TODO set up color temperature
 
 - Status Bars | `aylurs-gtk-shell-git`
 - Notification System | `dunst libnotify` TODO replace ags?
@@ -405,15 +402,12 @@ TODO
 
 hyprsunset
 
-grimblast-git, wl-copy
-
 https://archlinux.org/packages/?name=nm-connection-editor?
 
-- Fonts | `nerd-fonts`
-<!-- ttf-ms-fonts noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra ttf-jetbrains-mono-nerd ttf-jetbrains-mono ttf-iosevka-nerd` -->
+- Fonts | `nerd-fonts noto-fonts-cjk ttf-jetbrains-mono ttf-jetbrains-mono-nerd`
+  - Add chinese as a local
+<!-- ttf-ms-fonts noto-fonts  noto-fonts-emoji noto-fonts-extra ttf-jetbrains-mono-nerd ttf-jetbrains-mono ttf-iosevka-nerd` -->
   - Set Chinese as font priority
-- Screenshots | `grimblast-git`
-- Spotify Integration | `playerctl`
 
 # Command Line
 
