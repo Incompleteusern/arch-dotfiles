@@ -339,6 +339,12 @@ systemctl enable thermald tlp.service
 systemctl mask systemd-rfkill.service systemd-rfkill.socket # for tlp
 ```
 
+We also hibernate when battery is less than 3%, see [here](https://wiki.archlinux.org/title/Laptop#Hibernate_on_low_battery_level)
+with appending the following to `/etc/udev/rules.d/99-lowbat.rules`
+```
+# Suspend the system when battery level drops to 5% or lower
+SUBSYSTEM=="power_supply", ATTR{status}=="Discharging", ATTR{capacity}=="[0-5]", RUN+="/usr/bin/systemctl hibernate"
+```
 ### Time Sync
 
 We use chrony for time sync as a laptop | `(chrony) networkmanager-dispatcher-chrony`
@@ -404,7 +410,7 @@ hyprsunset
 
 https://archlinux.org/packages/?name=nm-connection-editor?
 
-- Fonts | `nerd-fonts noto-fonts-cjk ttf-jetbrains-mono ttf-jetbrains-mono-nerd`
+- Fonts | `noto-fonts-cjk ttf-jetbrains-mono ttf-jetbrains-mono-nerd`
   - Add chinese as a local
 <!-- ttf-ms-fonts noto-fonts  noto-fonts-emoji noto-fonts-extra ttf-jetbrains-mono-nerd ttf-jetbrains-mono ttf-iosevka-nerd` -->
   - Set Chinese as font priority
@@ -551,15 +557,12 @@ TODO:
 - qbittorrent?
 - keepassxc
 - Customize nvim (not for now)
-- https://wiki.archlinux.org/title/laptop#Hibernate_on_low_battery_level
-	- or on idle tbh
 - Document https://wiki.archlinux.org/title/OpenSSH#Deny
 - Firewall
 - https://wiki.archlinux.org/title/Improving_performance
-- Customize oh-my-zsh more
 - https://wiki.archlinux.org/title/Makepkg#Tips_and_tricks
 - Get spotify to work for local files
-- take a look at gnome control center
+- Wait for hyprspace to fix itself oops!
 
 # Desktop
 
@@ -575,38 +578,14 @@ TODO:
 
 ## Auto
 
-- Desktop Control | `brightnessctl pamixer`
-- Compositor | `hyprland qt5-wayland qt6-wayland`
-- XDG Integration | `xdg-utils xdg-desktop-portal-hyprland`
-- Status Bars | TODO
-- Wallpapers | TODO hyprpaper?
-- Notification System | `dunst libnotify`
-- Session Locker | TODO hyprlock?
-- Font Input | TODO look into `fcitx5 fcitx5-chinese-addons fcitx5-configtool fcitx-gtk fcitx5-pinyin-zhwiki fcitx5-qt mozc`
-- App Launcher | TODO look into
-- Terminal | `alacritty`
-- Pipewire | `pipewire wireplumber pipewire-jack pipewire-pulse`
-- Display Manager | TODO
-- Color Temperature | `gammastep`
-- Booting Animation | TODO how does this work `plymouth`
-- Color Picker `hyprpicker`
-- Polkit | TODO `polkit-kde-agent` does an alternative exist yet?
-- Fonts | `nerd-fonts noto-fonts-cjk`
-
-- Fonts | `nerd-fonts`
-<!-- ttf-ms-fonts noto-fonts noto-fonts-emoji noto-fonts-extra ttf-jetbrains-mono-nerd ttf-jetbrains-mono ttf-iosevka-nerd` -->
-  - Set Chinese as font priority
-- Screenshots | `grimblast-git`
-- Spotify Integration | `playerctl`
-
 # Applications
 
 ## Manual
 
-- Firefox
-  - Use duckduckgo, ublock origin, h26ify, privacy badger, stylus
-  - Use https only
-  - TODO automatically copy pref.js + extensions?
+- Firefox 
+  - Use duckduckgo, ublock origin, h26ify, stylus
+  - Startup > Open previous windows and tabs
+  - Enable HTTPS-Only mode
   - Set `media.ffmpeg.vaapi.enabled` to true
 
 - use `cups` for printer stuff.
@@ -616,7 +595,7 @@ TODO:
 
 ## Auto
 
-- Firefox | `firefox`
+- Firefox | `!firefox`
 - Discord | `discord-electron-bin discord-update-skip`
 - Prism Launcher | `prismlauncher`
 - Steam | `steam`
