@@ -312,7 +312,6 @@ cryptsetup --allow-discards --persistent  --perf-no_read_workqueue --perf-no_wri
 cryptsetup luksDump /dev/disk/by-partlabel/cryptlvm | grep Flags # confirm
 systemctl enable fstrim.timer
 ```
-(tpm2 doesn't work for these commands it seems).
 
 >[!INFO]
 >  TPM2 doesn't seem to work for these commands, so keeping a password is likely best. See [this link](https://wiki.archlinux.org/title/Dm-crypt/Specialties#Disable_workqueue_for_increased_solid_state_drive_(SSD)_performance) and [this one](https://wiki.archlinux.org/title/Dm-crypt/Specialties#Discard/TRIM_support_for_solid_state_drives_(SSD)) for security info.
@@ -588,10 +587,9 @@ TODO:
   - Enable HTTPS-Only mode
   - Set `media.ffmpeg.vaapi.enabled` to true
 
-- use `cups` for printer stuff.
-  - Do https://wiki.archlinux.org/title/avahi#hostname_resolution
-  - todo automate, move to installation section too?
-- enable firefox hardware acceleration, reopen tabs on close
+For printer stuff, I use `#cups cups-pdf`.
+This consists of following the steps [here](https://wiki.archlinux.org/title/avahi#hostname_resolution), 
+then running `systemctl start cups.service` and using the localhost page to find my printer.
 
 ## Auto
 
@@ -601,12 +599,13 @@ TODO:
 - Steam | `steam`
 - Vs Code | `visual-studio-code-bin`
 - VPN | `openvpn protonvpn-gui networkmanager-openvpn`
-- Spotify |`spotify-edge spotifywm spicetify`
+- Spotify |`spotify spotifywm spicetify`
 - Neovim | `nvim` (TODO nvimdots)
 - Intellij | `intellij-idea-community-edition`
 - File Manager | `thunar gvfs rmtrash trash-cli thunar-archive-plugin thunar-media-tags-plugin thunar-volman` (check out dolphin)
 - Tor | `tor torbrowser-launcher`
 - krita | `krita`
+- Libreoffice | `libreoffice-fresh`
 
 # Theming
 
